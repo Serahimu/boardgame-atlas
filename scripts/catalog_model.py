@@ -96,6 +96,9 @@ def add_provenance(games, dataset):
         checked = str(game.get('checked') or '')[:10] or config.get('snapshotDate')
         game['provenance'] = {'dataset': dataset, 'checkedAt': checked, 'updatedAt': None, 'sourceUrl': game.get('url'), 'dateBasis': 'item' if game.get('checked') else 'workbook_snapshot' if checked else 'unknown'}
         game['releaseInfo']['checkedAt'] = checked
+        release = game['releaseInfo']
+        if release['status'] == 'unknown' and release['precision'] == 'day' and checked:
+            release['status'] = 'released' if release['date'] <= checked else 'scheduled'
     return games
 
 def apply_overrides(games, overrides):

@@ -123,7 +123,7 @@ function render(){
   const exclusions=CatalogCore.normalize($('excluded-tags').value).split(/[;；]/).map(x=>x.trim()).filter(Boolean);
   if(exclusions.some(term=>taxonomy.some(([key])=>taxTerms.get(d.id)[key].some(t=>CatalogCore.normalize(t)===term))))return false;
   const releaseStatus=d.releaseInfo?.status;const yr=$('year-filter').value;if(yr==='unknown'&&/^\d{4}$/.test(String(d.year)))return false;if(/^\d{4}$/.test(yr)&&String(d.year)!==yr)return false;
-  if(yr==='upcoming'&&releaseStatus!=='upcoming'&&!/未發行|未上市/.test(d.edition||''))return false;if(yr==='released'&&(!/^\d{4}$/.test(String(d.year))||releaseStatus==='upcoming'||/未發行|未上市/.test(d.edition||'')))return false;
+  if(yr==='upcoming'&&!['unreleased','scheduled'].includes(releaseStatus))return false;if(yr==='released'&&releaseStatus!=='released')return false;
   const missing=$('missing-values').value==='include';
   const p=numberRange(d.players),t=numberRange(d.time),w=num(d.weight),r=num(d.rating),want=Number($('players').value);
   if(want&&!(missing&&!p.length)&&(!p.length||(want===6?Math.max(...p)<6:!(want>=p[0]&&want<=p[p.length-1]))))return false;
