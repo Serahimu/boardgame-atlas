@@ -2,7 +2,7 @@
 
 以繁體中文瀏覽桌遊資料的靜態網站，透過 GitHub Pages 部署。頁面提供搜尋、篩選、格狀／列表檢視，以及主遊戲、擴充、Promo、新版與相關文件的探索入口。
 
-功能與優化提案見[產品規劃文件](docs/plans/product-roadmap.md)，包含 108 項建議、優先級、交付階段、資料依賴與驗收方向；文件中的項目尚未代表已實作。
+功能與優化提案見[產品規劃文件](docs/plans/product-roadmap.md)，包含 108 項建議、優先級、交付階段、資料依賴與驗收方向；實際交付、來源內容覆蓋及遠期服務邊界見[實作追蹤](docs/implementation-status.md)與[驗收紀錄](docs/acceptance.md)。
 
 ## 兩份清單
 
@@ -20,7 +20,7 @@ Essen 資料查核日期為 **2026-10-17**，包含 1,296 筆原始清單對照�
 - 搜尋遊戲、相關項目、設計師或機制；按 `/` 可聚焦搜尋框。
 - 依玩家人數、遊玩時間、重度、評分及相關內容篩選。時間採上限；套用數值條件時會排除缺值項目。
 - 機制、類型、分類可複選：同組任一項符合即可，不同組須同時符合。
-- 兩頁皆以主遊戲為目錄入口，每頁 48 款，可排序或切換格狀／列表。檢視方式會儲存在瀏覽器；切換清單後搜尋與篩選會重新開始。
+- 兩頁皆以主遊戲為目錄入口，每頁可選 24／48／96 款，可排序或切換格狀／列表。檢視方式會儲存在瀏覽器；切換清單後搜尋與篩選會重新開始。
 - 點擊卡片查看詳情，繼續探索相關項目；按 Esc 或關閉按鈕離開詳情。
 - 兩個分頁都可切換「桌遊清單／出版社清單」。出版社卡片顯示 BGG 圖片、名稱、主遊戲數與收錄項目數，點選後可瀏覽該出版社在**目前清單**中的主遊戲、擴充、Promo 與新版，再點遊戲開啟原有詳情頁。
 - 出版社目錄可依出版社或收錄遊戲名稱搜尋，依名稱／收錄數排序，並支援分頁及格狀／列表。進入出版社後可依項目類型與其他遊戲條件篩選；返回目錄會保留出版社搜尋、排序與頁碼。
@@ -32,7 +32,7 @@ Essen 資料查核日期為 **2026-10-17**，包含 1,296 筆原始清單對照�
 
 ```text
 .
-├── index.html                          # 原有清單，內嵌原有 JSON 與封面
+├── index.html                          # 原有清單，共用模板產生，資料與圖片外置
 ├── essen.html                          # Essen 分頁
 ├── app.js                              # 共用搜尋、篩選、分頁與詳情邏輯
 ├── styles.css                          # 共用樣式與響應式版面
@@ -53,7 +53,7 @@ Essen 資料查核日期為 **2026-10-17**，包含 1,296 筆原始清單對照�
 └── SPIEL_2026_桌遊清單.xlsx              # 原始展會清單參考
 ```
 
-不需要 Node.js、套件安裝、API 金鑰或網站建置流程。瀏覽器直接讀取 HTML、CSS、JavaScript 與 JSON。Essen 文件按 BGG ID 的餘數分為 32 份，在開啟有文件的項目詳情時才載入對應檔案，並於同次頁面瀏覽中快取。
+訪客不需要套件、帳號或 API 金鑰。瀏覽器直接讀取靜態 HTML、CSS、JavaScript 與 JSON；維護者用 Python 3 重建，發布前以 Node.js 檢查語法及執行回歸測試。Essen 文件按 BGG ID 的餘數分為 32 份，在開啟有文件的項目詳情時才載入對應檔案，並於同次頁面瀏覽中快取。
 
 ## 本機預覽
 
@@ -82,7 +82,7 @@ python3 -m http.server 8000
 
 同名遊戲可能具有不同 BGG ID，部分新版也可能與主遊戲共用 BGG ID。網站以工作簿資料列的獨立 ID 導覽，使用關聯表中的 BGG ID、名稱、類型來對應項目，並保留多對多與巢狀關聯。文件以 BGG ID 共用，因此不同版次詳情可能呈現相同的文件清單，不能直接加總每張詳情的文件數作為全站文件總數。
 
-原有清單仍以 `index.html` 的 `game-data` 區塊為資料來源；修改 `BGG桌遊資料_完整.xlsx` 不會自動更新該區塊。
+原有清單亦從 `BGG桌遊資料_完整.xlsx` 由統一建置流程產生 `data/catalog.json`，不再內嵌於 HTML。修改來源後執行 `python3 scripts/build.py`。
 
 ### 更新封面
 
@@ -120,7 +120,7 @@ python3 scripts/build_publishers.py
 
 此專案以 `dev` 分支的 `/docs` 發布網站。執行 `python3 scripts/publish_pages.py` 先完成建置與檢查，再把公開白名單輸出到 `docs/`；來源 Excel、品質報告與私人資料不加入網站發布包。若使用分支部署，在 GitHub 的 **Settings → Pages** 選擇 **Deploy from a branch → dev → /docs**；若已配置其他部署流程，需一併發布兩個 HTML、共用資源、完整 `data/` 與 `assets/` 目錄。
 
-推送至部署分支後，等待 GitHub Pages 部署完成，再檢查首頁與 `essen.html`。所有站內資源皆使用相對路徑，適用於 `https://<帳號>.github.io/boardgame-atlas/` 形式的專案網站。此儲存庫不包含額外的 Actions 工作流程。
+推送至部署分支後，等待 GitHub Pages 部署完成，再檢查首頁與 `essen.html`。所有站內資源皆使用相對路徑，適用於 `https://<帳號>.github.io/boardgame-atlas/` 形式的專案網站。`Validate static catalog` Actions 在 `dev` 推送與 PR 執行自動檢查；本機 pre-push hook 亦檢查資料與測試。
 
 ## 驗證
 
@@ -128,7 +128,7 @@ python3 scripts/build_publishers.py
 
 ```bash
 python3 scripts/build_essen.py
-node --check app.js  # 若本機已安裝 Node.js，可檢查 JavaScript 語法
+node --test tests/*.test.cjs  # 發布前需要 Node.js
 git diff --check
 ```
 
@@ -169,3 +169,5 @@ python3 scripts/check_links.py --check --limit 20 --interval 1
 Pages 發布前執行 `python3 scripts/publish_pages.py`，將網站來源與產出的 `docs/` 一併提交至 `dev`。`docs/_config.yml` 排除規劃與驗收文件。
 
 穩定 ID 由 `data/identity-registry.json` 持續保存，來源 BGG ID（缺值時使用正規化 URL）、項目類型與版次 URL 為優先識別鍵；遊戲名稱更正、BGG 網址 slug 或追蹤參數變動不改變已發佈的 ID。只有同來源／類型／版次存在多個項目時才以名稱消歧；這類項目更名時，建置會要求在 registry 的 `names` 加入已查證的新別名，避免錯接收藏。請提交並保留 registry，不要每次重建刪除它。歷史數字 ID 遷移也會保留最早對應，新增項目請使用穩定 ID 分享網址。
+
+目前另提供收藏／私人備註／備份、比較與推薦、文件分類語言搜尋，以及裝置內原文譯文PDF閱讀。檔案只在瀏覽器內建立Blob入口，關閉或切換詳情即釋放，不上傳。中文名、版次差異和規則摘要只呈現有來源的已登錄內容。
