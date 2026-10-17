@@ -74,6 +74,22 @@
           "source": "https://boardgamegeek.com/boardgame/472208/cubaneo",
           "checkedAt": "2026-10-18"
         }
+      ],
+      "faq": [
+        {
+          "title": "個人提醒：第6輪是否清理？",
+          "text": "不進行最後清理：第6輪法案階段後立即進入終局計分。這是依規則整理的開桌提醒，非官方FAQ。",
+          "pages": "12",
+          "source": "https://boardgamegeek.com/boardgame/472208/cubaneo",
+          "checkedAt": "2026-10-18"
+        },
+        {
+          "title": "個人提醒：農產品和資源混淆",
+          "text": "清理時前院農產品腐敗，倉庫內不腐敗；資源與商品不會腐敗。",
+          "pages": "12",
+          "source": "https://boardgamegeek.com/boardgame/472208/cubaneo",
+          "checkedAt": "2026-10-18"
+        }
       ]
     },
     "catalog:1ffeac6b2a68ec771f85": {
@@ -146,6 +162,22 @@
           "title": "第一輪手牌",
           "text": "3人：移除所有4+標示的有星卡；起始牌移除1–5，剩30張每人10張。4人：起始牌移除1、2，剩36張每人9張。5人：40張起始牌每人8張。第一輪不使用王牌卡。",
           "pages": "1",
+          "source": "https://boardgamegeek.com/boardgame/468799/fishing-2",
+          "checkedAt": "2026-10-18"
+        }
+      ],
+      "faq": [
+        {
+          "title": "個人提醒：新獲得的牌放哪裡？",
+          "text": "每輪得分後洗混本輪獲得的牌；若船上還有舊抽牌堆，新洗好的牌放在舊牌下方，不重新混入舊牌。非官方FAQ。",
+          "pages": "2",
+          "source": "https://boardgamegeek.com/boardgame/468799/fishing-2",
+          "checkedAt": "2026-10-18"
+        },
+        {
+          "title": "個人提醒：第1輪有王牌嗎？",
+          "text": "第1輪忽略王牌卡；第2輪起由開始該輪的玩家選擇淺綠或深綠作為王牌。",
+          "pages": "1–2",
           "source": "https://boardgamegeek.com/boardgame/468799/fishing-2",
           "checkedAt": "2026-10-18"
         }
