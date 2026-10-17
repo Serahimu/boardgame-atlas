@@ -82,7 +82,15 @@ function renderPublishers(query){
  pageControls(found.length);
  $('catalog').innerHTML=found.length?found.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(p=>`<button class="card publisher-card" data-logo-background="${p.imageBackground||'light'}" data-publisher="${esc(p.key)}" aria-label="查看 ${esc(p.name)} 的收錄桌遊"><div class="cover">${p.image?`<img src="${esc(p.image)}" alt="${esc(p.name)} 出版社圖片" loading="lazy">`:`<span class="placeholder">${esc(p.name)}<small>${p.status==='unknown'?'資料未提供出版社':'BGG 暫無出版社圖片'}</small></span>`}</div><div><h3>${esc(p.name)}</h3><div class="meta">${p.games.filter(g=>g.kind==='主遊戲').length} 款主遊戲 · ${p.games.length} 項收錄</div></div><div class="cardfoot"><span class="pill">探索收錄桌遊 →</span></div></button>`).join(''):'<div class="empty"><h3>沒有符合條件的出版社</h3><p>試試其他出版社或遊戲名稱。</p><button class="textbtn" data-reset>清除搜尋</button></div>';
 }
+const activeFilters=document.createElement('div');activeFilters.id='active-filters';activeFilters.className='active-filters';$('catalog').before(activeFilters);
+function renderChips(){
+ const ids=['search','players','time','weight','rating','relation','search-field','year-filter','missing-values','catalog-scope'];
+ activeFilters.innerHTML=ids.filter(id=>$(id)?.value&&!['all','main','exclude'].includes($(id).value)).map(id=>`<button data-remove-filter="${id}">${esc($(id).selectedOptions?.[0]?.textContent||$(id).value)} ×</button>`).join('')+taxonomy.flatMap(([key])=>[...selected[key]].map(term=>`<button data-remove-tax="${key}" data-term="${esc(term)}">${esc(term)} ×</button>`)).join('');
+ if(activeFilters.children.length)activeFilters.insertAdjacentHTML('beforeend','<button data-reset>清除全部</button>');
+}
+activeFilters.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.removeFilter){$(b.dataset.removeFilter).value=b.dataset.removeFilter==='search-field'?'all':b.dataset.removeFilter==='catalog-scope'?'main':b.dataset.removeFilter==='missing-values'?'exclude':'';}if(b.dataset.removeTax){selected[b.dataset.removeTax].delete(b.dataset.term);document.querySelectorAll('[data-taxonomy]').forEach(i=>i.checked=selected[i.dataset.taxonomy].has(i.value));updateSelection()}page=1;render()};
 function render(){
+ renderChips();
  const directory=catalogMode==='publishers'&&!publisherKey;
  const query=$('search').value.trim().toLocaleLowerCase();
  $('catalog').className='catalog'+(view==='list'?' list':'');
