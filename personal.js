@@ -26,3 +26,8 @@ window.AtlasPersonal = (() => {
  features.push({title:'收藏狀態',form:r=>['已擁有','想玩','想買','已玩','已出售'].map(v=>`<label><input type="checkbox" name="statuses" value="${v}" ${(r.statuses||[]).includes(v)?'checked':''}>${v}</label>`).join('')+'<p>想玩、想買、已玩可並存；已擁有與已出售互斥。</p>',read:fd=>{const statuses=fd.getAll('statuses');if(statuses.includes('已擁有')&&statuses.includes('已出售'))throw Error('已擁有與已出售不能同時選取');return {statuses}}});
  return {init,attach,open,id,record,save,features,esc,input,select,button,download,get state(){return db},get games(){return games},persist,message,render,get dialog(){return dialog}};
 })();
+document.addEventListener('atlas:ready',e=>AtlasPersonal.init(e.detail.data));
+document.addEventListener('atlas:detail',e=>AtlasPersonal.attach(e.detail.game));
+if(window.Atlas?.data)AtlasPersonal.init(window.Atlas.data);
+
+{const A=window.AtlasPersonal;A.features.push({title:'自訂清單',form:r=>A.input('lists','清單名稱（逗號分隔）','text',(r.lists||[]).join(', ')),read:fd=>({lists:[...new Set(String(fd.get('lists')||'').split(/[,，]/).map(s=>s.trim()).filter(Boolean))]})});}
