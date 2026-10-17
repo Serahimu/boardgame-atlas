@@ -57,7 +57,7 @@ function initMultiselect(){
  const counts=new Map();for(const d of catalogGames())for(const term of taxTerms.get(d.id)[key])counts.set(term,(counts.get(term)||0)+1);
  const options=[...counts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'zh-Hant'));
  return `<details class="multifilter" data-group="${key}"><summary><strong>${label}</strong><span class="selectcount" id="count-${key}">不限</span></summary><div class="multibody"><label><span class="sr">搜尋${label}選項</span><input class="multisearch" type="search" data-option-search="${key}" placeholder="搜尋${label}…" autocomplete="off"></label><div class="multioptions" role="group" aria-label="${label}多選">${options.map(([term,count])=>`<label class="multioption"><input type="checkbox" data-taxonomy="${key}" value="${esc(term)}"><span>${esc(term)}</span><small>${count}</small></label>`).join('')}<p class="multinone" hidden>找不到符合的選項</p></div><div class="multiactions"><span>可複選 · 符合任一項</span><button class="textbtn" type="button" data-clear-group="${key}" aria-label="清除${label}選擇">清除</button></div></div></details>`;
- }).join('')+`<p class="filterhelp">同組符合任一項，不同組須同時符合。<br>依${scope}已收錄的標籤篩選；未列出的資料不推測補入。</p>`;
+ }).join('')+`<p class="filterhelp">同組可選任一／全部；數量排除本組條件計算，不同組須同時符合。<br>依${scope}已收錄的標籤篩選；未列出的資料不推測補入。</p>`;
 }
 function updateSelection(){for(const [key] of taxonomy){$('count-'+key).textContent=selected[key].size?`已選 ${selected[key].size}`:'不限';document.querySelector(`[data-group="${key}"]`).classList.toggle('has-selection',selected[key].size>0)}}
 $('multifilters').addEventListener('change',e=>{const input=e.target;if(!input.matches('[data-taxonomy]'))return;const set=selected[input.dataset.taxonomy];input.checked?set.add(input.value):set.delete(input.value);updateSelection();page=1;render()});
@@ -111,8 +111,8 @@ function render(){
  $('grid').setAttribute('aria-pressed',view==='grid');$('list').setAttribute('aria-pressed',view==='list');
  if(directory){renderPublishers(query);return;}
  const candidates=publisherKey?catalogGames():($('relation').value==='佔位項目'?data.filter(d=>d.kind==='佔位項目'):catalogGames());
- filtered=candidates.filter(d=>{
-  if(taxonomy.some(([key])=>selected[key].size&&!([...selected[key]][$('taxonomy-mode').value==='all'?'every':'some'](term=>(taxTerms.get(d.id)?.[key]||[]).includes(term)))))return false;
+ const predicate=(d,skipGroup=null)=>{
+  if(taxonomy.some(([key])=>key!==skipGroup&&selected[key].size&&!([...selected[key]][$('taxonomy-mode').value==='all'?'every':'some'](term=>(taxTerms.get(d.id)?.[key]||[]).includes(term)))))return false;
   const exclusions=CatalogCore.normalize($('excluded-tags').value).split(/[;；]/).map(x=>x.trim()).filter(Boolean);
   if(exclusions.some(term=>taxonomy.some(([key])=>taxTerms.get(d.id)[key].some(t=>CatalogCore.normalize(t)===term))))return false;
   const releaseStatus=d.releaseInfo?.status;const yr=$('year-filter').value;if(yr==='unknown'&&/^\d{4}$/.test(String(d.year)))return false;if(/^\d{4}$/.test(yr)&&String(d.year)!==yr)return false;
@@ -124,8 +124,10 @@ function render(){
   if($('weight').value&&!(missing&&w===null)&&(w===null||!({light:w<2,medium:w>=2&&w<3,heavy:w>=3&&w<4,expert:w>=4&&w<=5}[$('weight').value])))return false;
   if($('rating').value&&!(missing&&r===null)&&(r===null||r<Number($('rating').value)))return false;
   if($('relation').value&&(publisherKey?d.kind!==$('relation').value:$('relation').value!=='佔位項目'&&!family(d).some(x=>x.kind===$('relation').value)))return false;
-  return !query||matches(d,query)||family(d).some(x=>matches(x,query));
- });
+  return !query||matches(d,query)||family(d).some(x=>matches(x,query)); };
+ filtered=candidates.filter(d=>predicate(d));
+ for(const [key] of taxonomy){const counts=new Map();for(const d of candidates.filter(d=>predicate(d,key)))for(const term of taxTerms.get(d.id)[key])counts.set(term,(counts.get(term)||0)+1);document.querySelectorAll(`[data-taxonomy="${key}"]`).forEach(input=>{const count=counts.get(input.value)||0;input.closest("label").querySelector("small").textContent=count;input.disabled=!count&&!input.checked;})}
+
  const sort=$('sort').value;
  filtered.sort((a,b)=>{const n=(d,key,missing)=>num(d[key])??missing;return (sort==='relevance'?CatalogCore.relevance(searchIndex.get(b.id),query)-CatalogCore.relevance(searchIndex.get(a.id),query):sort==='source'?(num(a.sourceOrder)??999999)-(num(b.sourceOrder)??999999):sort==='rating'?n(b,'rating',-1)-n(a,'rating',-1):sort==='year'?n(b,'year',-1)-n(a,'year',-1):sort==='weight'?n(a,'weight',99)-n(b,'weight',99):sort==='relations'?family(b).length-family(a).length:0)||a.name.localeCompare(b.name,'en')});
  $('result').textContent=publisherKey?`${filtered.length} / ${candidates.length} 項收錄桌遊`:`${filtered.length} 款${$('relation').value==='佔位項目'?'佔位項目':'主遊戲'} / 共 ${mains.length} 款主遊戲`;
