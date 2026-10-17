@@ -5,8 +5,11 @@ window.AtlasPersonal = (() => {
  let db={version:1,items:{},lists:[],budget:0,currency:'EUR'}, games=[], active=null, dialog, storageWarning='', recoveryRaw='';
  function validateBackup(value){
   if(!value||value.version!==1||!value.items||Array.isArray(value.items)||typeof value.items!=='object')throw Error('不支援的備份格式或版本');
+  if(value.budget!==undefined&&(!Number.isFinite(value.budget)||value.budget<0))throw Error('備份預算格式錯誤');
+  if(value.currency!==undefined&&(typeof value.currency!=='string'||! /^[A-Z]{3}$/.test(value.currency)))throw Error('備份幣別格式錯誤');
   for(const [key,r] of Object.entries(value.items)){
    if(!r||typeof r!=='object'||Array.isArray(r)||r.id!==key||typeof r.name!=='string'||['__proto__','constructor','prototype'].includes(key))throw Error('備份內有無效項目');
+   for(const field of ['id','name','publisher','note','priority','updatedAt','hall','booth','boothSource','boothChecked','appointment','appointmentEnd','timezone','appointmentNote','orderNumber','payment','pickup','pickupDeadline','currency','fxSource','fxDate','fxTarget','boxSize','buyer','recipient','handoff'])if(r[field]!==undefined&&typeof r[field]!=='string')throw Error('文字欄位格式錯誤：'+field);
    for(const field of ['statuses','lists','visit'])if(r[field]!==undefined&&(!Array.isArray(r[field])||r[field].some(v=>typeof v!=='string')))throw Error('備份欄位格式錯誤：'+field);
    if(r.statuses?.includes('已擁有')&&r.statuses?.includes('已出售'))throw Error('備份收藏狀態互斥');
    if(r.plays!==undefined&&(!Array.isArray(r.plays)||r.plays.some(p=>!p||typeof p!=='object'||typeof p.date!=='string'||['players','result'].some(k=>p[k]!==undefined&&typeof p[k]!=='string'))))throw Error('遊玩紀錄格式錯誤');
