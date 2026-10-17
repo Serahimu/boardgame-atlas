@@ -43,3 +43,5 @@ return {ready,action,panel,rows,esc,id,split,nums,link,missing,get games(){retur
 document.addEventListener('atlas:detail',e=>{const E=AtlasEnhancements;document.getElementById('translation-detail').insertAdjacentHTML('beforeend','<p>翻譯進度：'+E.esc(E.translation(e.detail.game).map(t=>t.status||'未登錄').join('、')||'未登錄')+'</p>')});
 
 document.addEventListener('atlas:detail',e=>{const E=AtlasEnhancements;document.getElementById('translation-detail').insertAdjacentHTML('beforeend','<p>各類完整度：'+['主遊戲','擴充','輔助卡'].map(scope=>{const records=E.translation(e.detail.game).filter(t=>t.scope===scope);return scope+' '+(records.length?records.filter(t=>t.status==='已完成').length+'/'+records.length:'未建清冊')}).join('；')+'</p>')});
+
+document.addEventListener('atlas:detail',e=>{const E=AtlasEnhancements;document.getElementById('translation-detail').insertAdjacentHTML('beforeend',E.translation(e.detail.game).map(t=>`<p>${E.esc(t.edition||'版次未登錄')}：${E.link(t.originalUrl,'原文')} ${t.public===true?E.link(t.url,'譯文'):''}</p>`).join(''))});
