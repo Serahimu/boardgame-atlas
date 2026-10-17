@@ -1,0 +1,1 @@
+exclude: ["plans", "acceptance.md", "editorial-data.md", "implementation-status.md", "qa-enhancements.md", "qa-names.md", "qa-personal.md"]

@@ -1,0 +1,954 @@
+{
+  "schemaVersion": 1,
+  "games": {
+    "catalog:55fec6f1f8a665793f28": {
+      "translations": [
+        {
+          "title": "Cubaneo 繁中規則（本機私人檔案）",
+          "scope": "主遊戲",
+          "status": "待校對",
+          "public": false,
+          "source": "本機原譯文精確檔名配對、PDF標題與公開BGG項目人工核對",
+          "originalUrl": "https://boardgamegeek.com/boardgame/472208/cubaneo",
+          "localFileVerified": true,
+          "verifiedAt": "2026-10-18",
+          "notes": "已核對指定來源頁與繁中頁面；非全書校對完成。",
+          "edition": "English rulebook v1.0 / ©2026",
+          "editionSourcePages": "12",
+          "sourceDate": null,
+          "translatedDate": null,
+          "proofreadDate": null
+        }
+      ],
+      "glossary": [
+        {
+          "title": "resources / 資源",
+          "text": "木材、水、石材，與農產品及商品分開計。",
+          "pages": "5",
+          "source": "https://boardgamegeek.com/boardgame/472208/cubaneo",
+          "checkedAt": "2026-10-18"
+        },
+        {
+          "title": "products / 農產品",
+          "text": "柑橘、甘蔗、菸草。",
+          "pages": "5",
+          "source": "https://boardgamegeek.com/boardgame/472208/cubaneo",
+          "checkedAt": "2026-10-18"
+        },
+        {
+          "title": "commodities / 商品",
+          "text": "蘭姆酒、雪茄。農產品與商品合稱 trading goods／貿易貨品。",
+          "pages": "5",
+          "source": "https://boardgamegeek.com/boardgame/472208/cubaneo",
+          "checkedAt": "2026-10-18"
+        }
+      ],
+      "teaching": [
+        {
+          "title": "目標與流程",
+          "text": "遊戲共6輪；每輪依序準備、行動、事件、國會、法案、清理。透過船運、建築和法案取得勝利分。",
+          "pages": "5",
+          "source": "https://boardgamegeek.com/boardgame/472208/cubaneo",
+          "checkedAt": "2026-10-18"
+        },
+        {
+          "title": "結束與計分",
+          "text": "第6輪法案階段後結束，不再進行清理。每棟建築（含倉庫）再得2分；總分最高者勝。同分比較比索，仍同分共享勝利。",
+          "pages": "12",
+          "source": "https://boardgamegeek.com/boardgame/472208/cubaneo",
+          "checkedAt": "2026-10-18"
+        }
+      ],
+      "setup": [
+        {
+          "title": "中央設置",
+          "text": "30棟建築依背色與編號排成展示區；備好資源、農產品、商品與硬幣；依規則指定數量填市場；洗混15張船卡，翻開等候區及泊位1、2。",
+          "pages": "2–3",
+          "source": "https://boardgamegeek.com/boardgame/472208/cubaneo",
+          "checkedAt": "2026-10-18"
+        },
+        {
+          "title": "玩家及長廊",
+          "text": "每人隨機領地、所選顏色的工人、計分棋、5張角色及車牌。長廊固定用6張，按人數決定古巴人與驢子的組合，舞者必須在內。起始卡公開玩家數加1張，從起始玩家右手邊逆時針選取。",
+          "pages": "4",
+          "source": "https://boardgamegeek.com/boardgame/472208/cubaneo",
+          "checkedAt": "2026-10-18"
+        }
+      ],
+      "faq": [
+        {
+          "title": "個人提醒：第6輪是否清理？",
+          "text": "不進行最後清理：第6輪法案階段後立即進入終局計分。這是依規則整理的開桌提醒，非官方FAQ。",
+          "pages": "12",
+          "source": "https://boardgamegeek.com/boardgame/472208/cubaneo",
+          "checkedAt": "2026-10-18"
+        },
+        {
+          "title": "個人提醒：農產品和資源混淆",
+          "text": "清理時前院農產品腐敗，倉庫內不腐敗；資源與商品不會腐敗。",
+          "pages": "12",
+          "source": "https://boardgamegeek.com/boardgame/472208/cubaneo",
+          "checkedAt": "2026-10-18"
+        }
+      ]
+    },
+    "catalog:1ffeac6b2a68ec771f85": {
+      "translations": [
+        {
+          "title": "Fishing 2 繁中規則（本機私人檔案）",
+          "scope": "主遊戲",
+          "status": "待校對",
+          "public": false,
+          "source": "本機原譯文精確檔名配對、PDF標題與公開BGG項目人工核對",
+          "originalUrl": "https://boardgamegeek.com/boardgame/468799/fishing-2",
+          "localFileVerified": true,
+          "verifiedAt": "2026-10-18",
+          "notes": "已核對指定來源頁與繁中頁面；非全書校對完成。",
+          "edition": "English rules / ©2026（未標示修訂版號）",
+          "editionSourcePages": "2",
+          "sourceDate": null,
+          "translatedDate": null,
+          "proofreadDate": null
+        }
+      ],
+      "glossary": [
+        {
+          "title": "fisher / 漁夫",
+          "text": "當輪獲得的卡牌先放在漁夫卡上。",
+          "pages": "1",
+          "source": "https://boardgamegeek.com/boardgame/468799/fishing-2",
+          "checkedAt": "2026-10-18"
+        },
+        {
+          "title": "boat / 船",
+          "text": "放置自己的抽牌堆，供後續輪次抽牌。",
+          "pages": "1–2",
+          "source": "https://boardgamegeek.com/boardgame/468799/fishing-2",
+          "checkedAt": "2026-10-18"
+        },
+        {
+          "title": "ocean stack / 海洋牌堆",
+          "text": "自己的抽牌堆不足時，由此補足新牌。",
+          "pages": "1–2",
+          "source": "https://boardgamegeek.com/boardgame/468799/fishing-2",
+          "checkedAt": "2026-10-18"
+        }
+      ],
+      "teaching": [
+        {
+          "title": "目標與第一輪",
+          "text": "共8輪，每張獲得的卡牌值1分。第一輪必須跟出引領花色；沒有時可墊其他花色，引領花色最大數值贏得該墩並引領下一墩。",
+          "pages": "1",
+          "source": "https://boardgamegeek.com/boardgame/468799/fishing-2",
+          "checkedAt": "2026-10-18"
+        },
+        {
+          "title": "後續輪次與結束",
+          "text": "每輪先從自己的船上抽牌，不足再由海洋牌堆補足。第8輪後總分最高者勝，同分共享勝利；無法從海洋牌堆補足需求時立即結束，以當時總分決勝。",
+          "pages": "2",
+          "source": "https://boardgamegeek.com/boardgame/468799/fishing-2",
+          "checkedAt": "2026-10-18"
+        }
+      ],
+      "setup": [
+        {
+          "title": "配件與牌堆",
+          "text": "備好99張遊戲牌、每位玩家的漁夫卡與船卡、王牌卡、對應人數的輪次卡及追蹤卡、速查表，另備紙筆。依星數分堆，把5星至1星依序疊成海洋牌堆，使1星位於頂部。",
+          "pages": "1",
+          "source": "https://boardgamegeek.com/boardgame/468799/fishing-2",
+          "checkedAt": "2026-10-18"
+        },
+        {
+          "title": "第一輪手牌",
+          "text": "3人：移除所有4+標示的有星卡；起始牌移除1–5，剩30張每人10張。4人：起始牌移除1、2，剩36張每人9張。5人：40張起始牌每人8張。第一輪不使用王牌卡。",
+          "pages": "1",
+          "source": "https://boardgamegeek.com/boardgame/468799/fishing-2",
+          "checkedAt": "2026-10-18"
+        }
+      ],
+      "faq": [
+        {
+          "title": "個人提醒：新獲得的牌放哪裡？",
+          "text": "每輪得分後洗混本輪獲得的牌；若船上還有舊抽牌堆，新洗好的牌放在舊牌下方，不重新混入舊牌。非官方FAQ。",
+          "pages": "2",
+          "source": "https://boardgamegeek.com/boardgame/468799/fishing-2",
+          "checkedAt": "2026-10-18"
+        },
+        {
+          "title": "個人提醒：第1輪有王牌嗎？",
+          "text": "第1輪忽略王牌卡；第2輪起由開始該輪的玩家選擇淺綠或深綠作為王牌。",
+          "pages": "1–2",
+          "source": "https://boardgamegeek.com/boardgame/468799/fishing-2",
+          "checkedAt": "2026-10-18"
+        }
+      ]
+    },
+    "catalog:990b6f093440d0203fff": {
+      "editionDifference": {
+        "text": "出版社於2026-07-20公告：第二版是原作的全面重製，更新配件並改良規則；此版提供Richard Wilkins設計的單人模式，支援1–5人。這是出版社公告摘要，不表示第一版配件或擴充可直接相容；相容性尚未查證。",
+        "source": "https://wehrlegig.com/blogs/essays/announcing-an-infamous-traffic",
+        "checkedAt": "2026-10-18",
+        "sourcePublishedAt": "2026-07-20"
+      }
+    }
+  },
+  "mechanisms": {
+    "牌庫／袋庫／池庫構築": {
+      "english": "Deck, Bag, and Pool Building",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "終局獎勵": {
+      "english": "End Game Bonuses",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "手牌管理": {
+      "english": "Hand Management",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "風險挑戰": {
+      "english": "Push Your Luck",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "單人遊戲": {
+      "english": "Solo / Solitaire Game",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "工人擺放": {
+      "english": "Worker Placement",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "多用途卡牌": {
+      "english": "Multi-Use Cards",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "軌道移動": {
+      "english": "Track Movement",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "科技樹／科技軌": {
+      "english": "Tech Trees / Tech Tracks",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "玩家能力各異": {
+      "english": "Variable Player Powers",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "競逐": {
+      "english": "Race",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "圓形行動盤": {
+      "english": "Rondel",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "成套收集": {
+      "english": "Set Collection",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應",
+      "description": "玩家蒐集指定的物件組合，例如三個相同物件；交付成套物件通常可取得獎勵或滿足勝利條件。",
+      "source": "https://boardgamegeek.com/wiki/page/mechanic",
+      "checkedAt": "2026-10-18",
+      "sourceType": "BGG 機制 Wiki"
+    },
+    "可變設置": {
+      "english": "Variable Set-up",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "區域多數／影響力": {
+      "english": "Area Majority / Influence",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "區域移動": {
+      "english": "Area Movement",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "延遲購買": {
+      "english": "Delayed Purchase",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "公開選牌": {
+      "english": "Open Drafting",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "消耗資源移動": {
+      "english": "Resource to Move",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "板塊放置": {
+      "english": "Tile Placement",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "多種類工人擺放": {
+      "english": "Worker Placement, Different Worker Types",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "合約": {
+      "english": "Contracts",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "依序遞進回合順序": {
+      "english": "Turn Order: Progressive",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "模組化圖板": {
+      "english": "Modular Board",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "每局限用一次能力": {
+      "english": "Once-Per-Game Abilities",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "牌庫構築（遊戲前）": {
+      "english": "Deck Construction",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "沿牌庫推進": {
+      "english": "Move Through Deck",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "合作遊戲": {
+      "english": "Cooperative Game",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "劇本／任務／戰役遊戲": {
+      "english": "Scenario / Mission / Campaign Game",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "依圖樣移動": {
+      "english": "Pattern Movement",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "預先編排行動": {
+      "english": "Programmed Movement",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "拾取與運送": {
+      "english": "Pick-up and Deliver",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "同步選擇行動": {
+      "english": "Simultaneous Action Selection",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應",
+      "description": "所有玩家先選擇行動，再同時揭露並依遊戲規則處理。",
+      "source": "https://boardgamegeek.com/wiki/page/mechanic",
+      "checkedAt": "2026-10-18",
+      "sourceType": "BGG 機制 Wiki"
+    },
+    "連鎖行動": {
+      "english": "Chaining",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "秘密選牌": {
+      "english": "Closed Drafting",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "圈地": {
+      "english": "Enclosure",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "事件": {
+      "english": "Events",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "網格覆蓋": {
+      "english": "Grid Coverage",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "分層疊放": {
+      "english": "Layering",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "圖案拼組": {
+      "english": "Pattern Building",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "方格": {
+      "english": "Square Grid",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "受限競標": {
+      "english": "Constrained Bidding",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "競標選擇順序": {
+      "english": "Selection Order Bid",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "標籤": {
+      "english": "Tags",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "依拍賣決定回合順序": {
+      "english": "Turn Order: Auction",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "行動點數": {
+      "english": "Action Points",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "行動回收": {
+      "english": "Action Retrieval",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "網格移動": {
+      "english": "Grid Movement",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "地圖擴增": {
+      "english": "Map Addition",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "收入": {
+      "english": "Income",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "移動點數": {
+      "english": "Movement Points",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "六角格": {
+      "english": "Hexagon Grid",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "點對點移動": {
+      "english": "Point to Point Movement",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "擲骰": {
+      "english": "Dice Rolling",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "市場": {
+      "english": "Market",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "行動選擇": {
+      "english": "Action Drafting",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "牌組展示與展開": {
+      "english": "Melding and Splaying",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "資源佇列": {
+      "english": "Resource Queue",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "依能力值決定回合順序": {
+      "english": "Turn Order: Stat-Based",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "骰子工人擺放": {
+      "english": "Worker Placement with Dice Workers",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "跟隨行動": {
+      "english": "Follow",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "荷蘭式優先權拍賣": {
+      "english": "Auction: Dutch Priority",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "交易": {
+      "english": "Trading",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "依宣告行動決定回合順序": {
+      "english": "Turn Order: Claim Action",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "播棋": {
+      "english": "Mancala",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "鄰位互動範圍": {
+      "english": "Neighbor Scope",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "溝通限制": {
+      "english": "Communication Limits",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "推理": {
+      "english": "Deduction",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "記憶": {
+      "english": "Memory",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "即時行動": {
+      "english": "Real-Time",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "驟死結束": {
+      "english": "Sudden Death Ending",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "連接": {
+      "english": "Connections",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "控制區域": {
+      "english": "Zone of Control",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "出牌解決衝突": {
+      "english": "Card Play Conflict Resolution",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "佔領制高點": {
+      "english": "King of the Hill",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "囚徒困境": {
+      "english": "Prisoner's Dilemma",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "拍賣／競標": {
+      "english": "Auction / Bidding",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "戰役／戰鬥卡牌驅動": {
+      "english": "Campaign / Battle Card Driven",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "大成功與大失敗": {
+      "english": "Critical Hits and Failures",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "地圖變形": {
+      "english": "Map Deformation",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "計分後重置": {
+      "english": "Score-and-Reset Game",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "行動計時": {
+      "english": "Action Timer",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "我分你選": {
+      "english": "I Cut, You Choose",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "身分資訊不對稱": {
+      "english": "Roles with Asymmetric Information",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "半合作遊戲": {
+      "english": "Semi-Cooperative Game",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "排序": {
+      "english": "Ordering",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "相對移動": {
+      "english": "Relative Movement",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "封閉經濟拍賣": {
+      "english": "Closed Economy Auction",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "商品投機": {
+      "english": "Commodity Speculation",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "貸款": {
+      "english": "Loans",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "密封競標": {
+      "english": "Auction: Sealed Bid",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "持有股票": {
+      "english": "Stock Holding",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "以勝利點數作為資源": {
+      "english": "Victory Points as a Resource",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "視線": {
+      "english": "Line of Sight",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "投票": {
+      "english": "Voting",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "吃墩": {
+      "english": "Trick-taking",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "行動佇列": {
+      "english": "Action Queue",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "偏置": {
+      "english": "Bias",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "角色扮演": {
+      "english": "Role Playing",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "網路與路線建設": {
+      "english": "Network and Route Building",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "可變階段順序": {
+      "english": "Variable Phase Order",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "傳承遊戲": {
+      "english": "Legacy Game",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "擲骰／轉盤移動": {
+      "english": "Roll / Spin and Move",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "敘事選擇／段落劇情": {
+      "english": "Narrative Choice / Paragraph",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "說故事": {
+      "english": "Storytelling",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "多單位移動": {
+      "english": "Moving Multiple Units",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "依退出順序決定回合順序": {
+      "english": "Turn Order: Pass Order",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "中斷行動": {
+      "english": "Interrupts",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "分隊遊戲": {
+      "english": "Team-Based Game",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "荷蘭式拍賣": {
+      "english": "Auction: Dutch",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "多張地圖": {
+      "english": "Multiple Maps",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "紙筆遊戲": {
+      "english": "Paper-and-Pencil",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "直接攻擊互動": {
+      "english": "Take That",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "隱藏勝利點數": {
+      "english": "Hidden Victory Points",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "投資": {
+      "english": "Investment",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "依時間軌決定回合順序": {
+      "english": "Turn Order: Time Track",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "最高／最低計分": {
+      "english": "Highest-Lowest Scoring",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "畫線": {
+      "english": "Line Drawing",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "圖案辨識": {
+      "english": "Pattern Recognition",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "以競標作為賭注": {
+      "english": "Bids As Wagers",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "堆疊與平衡": {
+      "english": "Stacking and Balancing",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "以棋子構成地圖": {
+      "english": "Pieces as Map",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "命令卡": {
+      "english": "Command Cards",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "繪畫": {
+      "english": "Drawing",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "逐級压牌": {
+      "english": "Ladder Climbing",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "配對": {
+      "english": "Matching",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "行動／事件": {
+      "english": "Action / Event",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "終局事件結束": {
+      "english": "Finale Ending",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "滑動／推動": {
+      "english": "Slide / Push",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "兵力承諾": {
+      "english": "Force Commitment",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "賄賂": {
+      "english": "Bribery",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "叛徒遊戲": {
+      "english": "Traitor Game",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "下注與虛張聲勢": {
+      "english": "Betting and Bluffing",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "骰面圖示結算": {
+      "english": "Die Icon Resolution",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "玩家淘汰": {
+      "english": "Player Elimination",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "資源自動增長": {
+      "english": "Automatic Resource Growth",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "模擬": {
+      "english": "Simulation",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "追趕領先者": {
+      "english": "Catch the Leader",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "燙手山芋": {
+      "english": "Hot Potato",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "結盟": {
+      "english": "Alliances",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "預測式競標": {
+      "english": "Predictive Bid",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "賓果": {
+      "english": "Bingo",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "隱藏身分": {
+      "english": "Hidden Roles",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "隱藏移動": {
+      "english": "Hidden Movement",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "秘密部署單位": {
+      "english": "Secret Unit Deployment",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "所有權": {
+      "english": "Ownership",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "即時計時結束": {
+      "english": "Elapsed Real Time Ending",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "隨機生產": {
+      "english": "Random Production",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "方塊塔": {
+      "english": "Cube Tower",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "歸納推理": {
+      "english": "Induction",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "不同骰子移動": {
+      "english": "Different Dice Movement",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "依序競標至退出": {
+      "english": "Auction: Turn Order Until Pass",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "拔河拉鋸": {
+      "english": "Tug of War",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "實體移除": {
+      "english": "Physical Removal",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "依角色決定回合順序": {
+      "english": "Turn Order: Role Order",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "跳過回合": {
+      "english": "Lose a Turn",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "優勢標記": {
+      "english": "Advantage Token",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "能力值檢定": {
+      "english": "Stat Check Resolution",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "重擲與鎖定骰子": {
+      "english": "Re-rolling and Locking",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "談判": {
+      "english": "Negotiation",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "彈射": {
+      "english": "Flicking",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "尾刀搶殺": {
+      "english": "Kill Steal",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "拼字": {
+      "english": "Spelling",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "三維移動": {
+      "english": "Three Dimensional Movement",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "單輪拍賣": {
+      "english": "Auction: Once Around",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "歌唱": {
+      "english": "Singing",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "指定目標提示": {
+      "english": "Targeted Clues",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "多標的拍賣": {
+      "english": "Auction: Multiple Lot",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "固定位置拍賣": {
+      "english": "Auction: Fixed Placement",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "地圖縮減": {
+      "english": "Map Reduction",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "問答": {
+      "english": "Questions and Answers",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "命令標記": {
+      "english": "Order Counters",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "一次性遊玩": {
+      "english": "Single Play",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "拍賣補償": {
+      "english": "Auction Compensation",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "固定吃子": {
+      "english": "Static Capture",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "隨機回合順序": {
+      "english": "Turn Order: Random",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "剪刀石頭布": {
+      "english": "Rock-Paper-Scissors",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "快速配對": {
+      "english": "Speed Matching",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "表演": {
+      "english": "Acting",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "玩家裁判": {
+      "english": "Player Judge",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "測量距離移動": {
+      "english": "Measurement Movement",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "技巧拍賣": {
+      "english": "Auction: Dexterity",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "朝向": {
+      "english": "Facing",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "抽取指令標記": {
+      "english": "Chit-Pull System",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "傳遞行動標記": {
+      "english": "Passed Action Token",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "小地圖結算": {
+      "english": "Minimap Resolution",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    },
+    "牌庫／袋庫／資源池構築": {
+      "english": "Deck, Bag, and Pool Building",
+      "nameSource": "既有來源欄位 mechanism / mechanismZh 逐項對照；僅保留唯一對應"
+    }
+  },
+  "notice": "僅加入已查證、有來源及頁碼的內容；空白表示尚未查證。"
+}
