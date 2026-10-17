@@ -33,3 +33,5 @@ if(window.Atlas?.data)AtlasPersonal.init(window.Atlas.data);
 {const A=window.AtlasPersonal;A.features.push({title:'自訂清單',form:r=>A.input('lists','清單名稱（逗號分隔）','text',(r.lists||[]).join(', ')),read:fd=>({lists:[...new Set(String(fd.get('lists')||'').split(/[,，]/).map(s=>s.trim()).filter(Boolean))]})});}
 
 {const A=window.AtlasPersonal;A.features.push({title:'私人備註',form:r=>`<label>規則提醒、購買考量與心得<textarea name="note">${A.esc(r.note||'')}</textarea></label>`,read:fd=>({note:String(fd.get('note')||'')})});}
+
+{const A=window.AtlasPersonal;A.features.push({title:'個人評分',form:r=>A.input('rating','我的評分 / 10','number',r.rating??'','min="0" max="10" step="0.1"'),read:fd=>({rating:fd.get('rating')===''?null:Number(fd.get('rating'))})});}
