@@ -182,6 +182,14 @@
           "checkedAt": "2026-10-18"
         }
       ]
+    },
+    "catalog:990b6f093440d0203fff": {
+      "editionDifference": {
+        "text": "出版社於2026-07-20公告：第二版是原作的全面重製，更新配件並改良規則；此版提供Richard Wilkins設計的單人模式，支援1–5人。這是出版社公告摘要，不表示第一版配件或擴充可直接相容；相容性尚未查證。",
+        "source": "https://wehrlegig.com/blogs/essays/announcing-an-infamous-traffic",
+        "checkedAt": "2026-10-18",
+        "sourcePublishedAt": "2026-07-20"
+      }
     }
   },
   "mechanisms": {
