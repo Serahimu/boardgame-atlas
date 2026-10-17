@@ -13,6 +13,7 @@ def main():
     previous=json.loads(manifest.read_text()) if manifest.exists() else []
     for name in previous:
         path=target/name
+        if not path.resolve().is_relative_to(target.resolve()):raise ValueError('Unsafe Pages manifest path')
         if path.is_file():path.unlink()
     paths=[]
     for path in source.rglob('*'):

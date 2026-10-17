@@ -13,11 +13,12 @@
 - 私人收藏狀態及備註保存後重新整理仍保留；測試備註與狀態已清空。正常資料未傳送至外部服務。
 - 個人工具顯示 JSON 備份、CSV、還原、預算、行程與列印入口；匯入損壞與quota失敗由單元測試驗證。
 - 離線包已實際下載，635 bytes 的驗收檔包含遊戲及離線範圍說明，不含測試私人備註或script。
+- 實際發布包 `/docs/index.html` 可搜尋及開啟 Cubaneo 詳情；選本機原文 PDF 後顯示「已在此裝置開啟，未上傳」及 Blob iframe 閱讀入口。
 - 瀏覽器檢查過程未見 JavaScript console error。
 
 ## 自動檢查
 
-執行 `node --test tests/*.test.cjs`、`python3 -m unittest discover -s tests -p 'test_*.py'`、`python3 scripts/build.py`、`python3 scripts/validate_site.py` 及 `git diff --check`。最終次數與發布結果於交付時更新。
+執行 `node --test tests/*.test.cjs`、`python3 -m unittest discover -s tests -p 'test_*.py'`、`python3 scripts/build.py`、`python3 scripts/validate_site.py` 及 `git diff --check`。最終結果：Python 14 項、JavaScript 30 項，共44項測試通過；113份JSON、資源引用、ID、關聯、分片與私人資料邊界檢查通過。
 
 資料測試涵蓋重排列、改名、共用BGG不同版次、多對多／巢狀關聯、缺值與日期、欄位重排、覆寫來源、160筆原清單封面保留及詳情分片引用。個人工具測試涵蓋狀態互斥、備份合併、損壞與quota失敗、資料escape、分享欄位白名單與來源證據。
 
