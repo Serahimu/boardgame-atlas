@@ -43,3 +43,21 @@ def add_relations(games):
         game['parentStableIds'] = [by_id[i]['stableId'] for i in game['parentIds']]
         game['relatedStableIds'] = [by_id[i]['stableId'] for i in game['relatedIds']]
     return games
+
+def split_values(value):
+    text = str(value or '')
+    if not text or re.search(r'未標示|未公開|未有|未提供|未獨立|不適用', text):
+        return []
+    # A semicolon-delimited source may contain commas inside a mechanism name.
+    separator = r'[;；]' if re.search(r'[;；]', text) else r'[,、]'
+    return [v.strip() for v in re.split(separator, text) if v.strip()]
+
+def add_structure(games):
+    for game in games:
+        game['people'] = {role: [{'id': role + ':' + hashlib.sha256(normalized(n).encode()).hexdigest()[:16], 'name': n} for n in split_values(game.get(field))] for role, field in [('designers', 'designer'), ('artists', 'artist')]}
+        game['tags'] = {}
+        for field in ['type', 'category', 'mechanism']:
+            originals = split_values(game.get(field))
+            translated = split_values(game.get(field + 'Zh'))
+            game['tags'][field] = [{'id': field + ':' + hashlib.sha256(normalized(n).encode()).hexdigest()[:16], 'name': n, 'nameZh': translated[i] if len(translated) == len(originals) else None} for i, n in enumerate(originals)]
+    return games
