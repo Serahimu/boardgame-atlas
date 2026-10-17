@@ -88,3 +88,10 @@ def add_release(games):
         date = '-'.join(v for v in match.groups() if v) if match else None
         game['releaseInfo'] = {'date': date, 'precision': ('day' if match[3] else 'month' if match[2] else 'year') if match else 'unknown', 'status': 'unreleased' if re.search(r'未發行|未上市|unreleased', raw + str(game.get('edition') or ''), re.I) else 'unknown', 'raw': raw, 'checkedAt': str(game.get('checked') or '')[:10] or None}
     return games
+
+def add_provenance(games, dataset):
+    for game in games:
+        checked = str(game.get('checked') or '')[:10] or ('2026-10-16' if dataset == 'catalog' else None)
+        game['provenance'] = {'dataset': dataset, 'checkedAt': checked, 'updatedAt': None, 'sourceUrl': game.get('url'), 'dateBasis': 'item' if game.get('checked') else 'workbook_snapshot' if checked else 'unknown'}
+        game['releaseInfo']['checkedAt'] = checked
+    return games
