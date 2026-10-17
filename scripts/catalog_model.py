@@ -95,3 +95,16 @@ def add_provenance(games, dataset):
         game['provenance'] = {'dataset': dataset, 'checkedAt': checked, 'updatedAt': None, 'sourceUrl': game.get('url'), 'dateBasis': 'item' if game.get('checked') else 'workbook_snapshot' if checked else 'unknown'}
         game['releaseInfo']['checkedAt'] = checked
     return games
+
+def apply_overrides(games, overrides):
+    if overrides.get('schemaVersion') != 1: raise ValueError('Unsupported override schema')
+    forbidden = {'id','stableId','entityId','bggid','name','kind','version','parentIds','relatedIds'}
+    by_id = {g['stableId']: g for g in games}
+    for key, entry in overrides.get('items', {}).items():
+        if key not in by_id: continue  # May target another configured dataset.
+        if not entry.get('reason') or not entry.get('source'): raise ValueError('Override requires reason and source: ' + key)
+        fields = entry.get('fields', {})
+        if forbidden.intersection(fields): raise ValueError('Identity/relationship override forbidden: ' + key)
+        by_id[key].update(fields)
+        by_id[key]['editorialOverride'] = {'reason':entry['reason'],'source':entry['source']}
+    return games
