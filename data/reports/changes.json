@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "baseline": "HEAD",
+  "datasets": {
+    "catalog": {
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    "essen": {
+      "added": [],
+      "removed": [],
+      "changed": []
+    }
+  }
+}

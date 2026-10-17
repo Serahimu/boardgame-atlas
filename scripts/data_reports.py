@@ -32,7 +32,23 @@ def quality():
             if codes:issues.append({'stableId':g['stableId'],'name':g['name'],'issues':codes})
         report['datasets'][name]={'count':len(games),'issueCount':len(issues),'issues':issues}
     write('quality.json',report)
+def diff(baseline='HEAD'):
+    import subprocess
+    report={'schemaVersion':1,'baseline':baseline,'datasets':{}}
+    for name,games in datasets():
+        result=subprocess.run(['git','show',f'{baseline}:data/{name}.json'],cwd=ROOT,capture_output=True,text=True)
+        if result.returncode: raise ValueError('Baseline unavailable: '+baseline+' data/'+name+'.json')
+        previous=json.loads(result.stdout)
+        old={g.get('stableId') or str(g['id']):g for g in previous}
+        new={g.get('stableId') or str(g['id']):g for g in games}
+        changed=[]
+        for key in sorted(old.keys() & new.keys()):
+            fields={field:{'before':old[key].get(field),'after':new[key].get(field)} for field in ['name','rating','documentCount','parentStableIds','relatedStableIds'] if old[key].get(field)!=new[key].get(field)}
+            if fields:changed.append({'stableId':key,'changes':fields})
+        report['datasets'][name]={'added':sorted(new.keys()-old.keys()),'removed':sorted(old.keys()-new.keys()),'changed':changed}
+    write('changes.json',report)
+
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('report',choices=['quality']);args=parser.parse_args()
-    globals()[args.report]()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('report',choices=['quality','diff']);parser.add_argument('--baseline',default='HEAD');args=parser.parse_args()
+    diff(args.baseline) if args.report=='diff' else quality()
 if __name__=='__main__':main()
