@@ -47,11 +47,14 @@ def main():
     docs_by_game = defaultdict(list)
     for row in documents:
         docs_by_game[row["A"]].append({k: row.get(c, "") for k, c in zip(["bggid", "game", "name", "category", "language", "detectedLanguage", "scope", "url", "button", "source", "sourceUrl", "date", "notes"], "ABCDEFGHIJKLM")})
-    # Reuse existing embedded covers where available; the workbook supplies gallery links, not cover files.
+    # The workbook's gallery URLs are HTML pages, not image files.
+    # Prefer verified local cover assets; retain existing embedded covers as a fallback.
     import re
     html = (ROOT / "index.html").read_text(encoding="utf-8")
     existing = json.loads(re.search(r'<script id="game-data" type="application/json">(.*?)</script>', html, re.S)[1])
     images = {str(d["bggid"]): d["image"] for d in existing if d.get("image")}
+    manifest_path = ROOT / "data/cover-manifest.json"
+    covers = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
     result = []
     for index, row in enumerate(games):
         game = {key: row.get(column, "") for key, column in zip(keys, columns)}
@@ -59,6 +62,13 @@ def main():
         game.update(id=index, relatedIds=[], parentIds=[], originals=source_rows[bggid], documentCount=len(docs_by_game[bggid]))
         if bggid in images:
             game["image"] = images[bggid]
+        cover = covers.get(bggid) or covers.get(game["url"])
+        if cover and cover["status"] == "ok":
+            assert (ROOT / cover["image"]).is_file(), f"Missing cover asset: {cover['image']}"
+            game["image"] = cover["image"]
+            game["imageSource"] = cover["sourceUrl"]
+        elif cover and cover["status"] == "no-image":
+            game.pop("image", None)
         result.append(game)
     ids = {g["bggid"] for g in result}
     assert all(r["A"] in ids and r["D"] in ids for r in relations), "Unresolved relationship"
