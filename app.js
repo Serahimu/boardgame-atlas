@@ -1,11 +1,11 @@
 'use strict';
 (async function () {
 const isEssen=document.body.dataset.collection==='essen';
-const PAGE_SIZE=48;
+let PAGE_SIZE=48;
 document.addEventListener('error',event=>{const img=event.target;if(!(img instanceof HTMLImageElement))return;if(img.closest('.cover')){const fallback=document.createElement('span');fallback.className='placeholder';fallback.textContent=img.alt.replace(/ (?:封面|出版社圖片)$/,'');const label=document.createElement('small');label.textContent=img.alt.includes('出版社圖片')?'出版社圖片暫時無法載入':'封面暫時無法載入';fallback.append(label);img.replaceWith(fallback)}else if(img.closest('.related,.publisher-heading'))img.hidden=true},true);
 async function loadJSON(path){const response=await fetch(path);if(!response.ok)throw new Error(`HTTP ${response.status}`);return response.json()}
 
-const data=(isEssen?await loadJSON('data/essen.json'):JSON.parse(document.getElementById('game-data').textContent)), mains=data.filter(d=>d.kind==='主遊戲'), $=id=>document.getElementById(id), esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])), num=v=>v!==null&&v!==''&&Number.isFinite(Number(v))?Number(v):null, val=v=>v===null||v===undefined||v===''?'未提供':String(v), safeurl=v=>/^https:\/\//.test(v||'')?esc(v):'#';
+const data=(isEssen?await loadJSON('data/essen.json'):(document.getElementById('game-data')?JSON.parse(document.getElementById('game-data').textContent):await loadJSON('data/catalog.json'))), mains=data.filter(d=>d.kind==='主遊戲'), $=id=>document.getElementById(id), esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])), num=v=>v!==null&&v!==''&&Number.isFinite(Number(v))?Number(v):null, val=v=>v===null||v===undefined||v===''?'未提供':String(v), safeurl=v=>/^https:\/\//.test(v||'')?esc(v):'#';
 const byId=new Map(data.map(d=>[d.id,d]));
 const publisherData=await loadJSON('data/publishers.json').catch(error=>{console.error(error);return null});
 const publisherRecords=new Map((publisherData?.publishers||[]).map(p=>[p.key,p]));
@@ -38,7 +38,8 @@ const score=d=>num(d.rating)===null?'未評分':num(d.rating).toFixed(1);
 function cover(d){return `<div class="cover">${d.image?`<img src="${d.image}" alt="${esc(d.name)} 封面" loading="lazy">`:`<span class="placeholder">${esc(d.name)}${isEssen?`<small>${d.kind==='佔位項目'?'非具名桌遊項目':'來源暫無封面'}</small>`:''}</span>`}<span class="score">${score(d)}</span></div>`}
 function family(d){return children.get(isEssen?d.id:d.name)||[]}
 function counts(d){return ['擴充','Promo','新版'].map(k=>{const n=family(d).filter(x=>x.kind===k).length;return n?`<span class="pill">${n} ${k}</span>`:''}).join('')}
-function matches(d,q){return Object.values(d).filter(x=>typeof x==='string'&&!x.startsWith('data:')).join(' ').toLocaleLowerCase().includes(q)}
+const searchIndex=new Map(data.map(d=>[d.id,CatalogCore.index(d)]));
+function matches(d,q){return CatalogCore.match(searchIndex.get(d.id),q,$('search-field')?.value||'all')}
 
 function initMultiselect(){
  const scope=publisherKey?'本出版社收錄項目':'主遊戲';
