@@ -80,3 +80,11 @@ def add_metrics(games):
         game['metrics'] = metrics
         game['missingValues'] = {k: str(game.get({'minutes': 'time'}.get(k, k)) or 'source_not_provided') for k, v in metrics.items() if v is None}
     return games
+
+def add_release(games):
+    for game in games:
+        raw = str(game.get('release') or '')
+        match = re.match(r'^(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?', raw)
+        date = '-'.join(v for v in match.groups() if v) if match else None
+        game['releaseInfo'] = {'date': date, 'precision': ('day' if match[3] else 'month' if match[2] else 'year') if match else 'unknown', 'status': 'unreleased' if re.search(r'未發行|未上市|unreleased', raw + str(game.get('edition') or ''), re.I) else 'unknown', 'raw': raw, 'checkedAt': str(game.get('checked') or '')[:10] or None}
+    return games
