@@ -20,6 +20,9 @@ Essen 資料查核日期為 **2026-10-17**，包含 1,296 筆原始清單對照�
 - 機制、類型、分類可複選：同組任一項符合即可，不同組須同時符合。
 - 兩頁皆以主遊戲為目錄入口，每頁 48 款，可排序或切換格狀／列表。檢視方式會儲存在瀏覽器；切換清單後搜尋與篩選會重新開始。
 - 點擊卡片查看詳情，繼續探索相關項目；按 Esc 或關閉按鈕離開詳情。
+- 兩個分頁都可切換「桌遊清單／出版社清單」。出版社卡片顯示 BGG 圖片、名稱、主遊戲數與收錄項目數，點選後可瀏覽該出版社在**目前清單**中的主遊戲、擴充、Promo 與新版，再點遊戲開啟原有詳情頁。
+- 出版社目錄可依出版社或收錄遊戲名稱搜尋，依名稱／收錄數排序，並支援分頁及格狀／列表。進入出版社後可依項目類型與其他遊戲條件篩選；返回目錄會保留出版社搜尋、排序與頁碼。
+- `index.html#publishers`、`essen.html#publishers` 可直接開啟出版社清單；`#publisher=<BGG 出版社 ID>` 可分享某家出版社的收錄項目。瀏覽器上一頁／下一頁及重新整理均支援。切換兩個分頁時會保留出版社瀏覽模式。
 - Essen 預設按原清單順序排列，補入的關聯主遊戲排在有來源序號的遊戲之後。「相關內容 → 佔位項目」可查看原始清單的 3 筆非具名項目。
 - Essen 詳情包含所有關聯遊戲、資料來源、原清單對照與文件。文件可搜尋名稱、類別或語言；「資料範圍與整理說明」可展開查看工作簿說明或下載完整 Excel。
 
@@ -32,13 +35,17 @@ Essen 資料查核日期為 **2026-10-17**，包含 1,296 筆原始清單對照�
 ├── app.js                              # 共用搜尋、篩選、分頁與詳情邏輯
 ├── styles.css                          # 共用樣式與響應式版面
 ├── assets/covers/                      # 網站本地 WebP 封面，依 BGG ID 命名
+├── assets/publishers/                  # 從 BGG 下載的出版社圖片
 ├── data/
 │   ├── essen.json                      # Essen 全部項目、關聯與來源對照
 │   ├── essen-notes.json                # 工作簿「整理說明」
 │   ├── cover-manifest.json             # 封面圖片、BGG ID、來源與查核記錄
+│   ├── publishers.json                 # 出版社 ID、圖片來源及原始名稱對應
+│   ├── publisher-game-links.json       # BGG 遊戲 → 出版社關聯查核快取
 │   └── essen-documents/0.json … 31.json # 依 BGG ID 分組的文件資料
 ├── scripts/build_essen.py              # Excel → 靜態 JSON 轉換程式
 ├── scripts/fetch_covers.py             # 下載並驗證 BGG 主要圖片，可接續進度
+├── scripts/build_publishers.py         # 建立出版社對應與下載圖片，可接續進度
 ├── BGG桌遊資料_完整.xlsx                 # 原有收藏資料來源
 ├── Essen2026_Most_Wanted_桌遊資料_完整.xlsx # Essen 資料來源
 └── SPIEL_2026_桌遊清單.xlsx              # 原始展會清單參考
@@ -92,6 +99,20 @@ python3 scripts/build_essen.py
 `cover-manifest.json` 保留原始圖片網址、來源 metadata 網址、圖片 ID、名稱、尺寸與日期。沒有 BGG ID 的 Wondrous Places 擴充使用出版商官方 Gamefound 商品圖，並以工作簿內的來源 URL 對應。BGG 缺圖的部分擴充與 Flipmas 版本另以出版商的 Gamefound、GameFlight、Kosmos 商品圖補足，記錄 `provider: publisher` 及原始品名供核對。
 
 目前有 **3,314 個本地圖片檔**，對應 **3,587 個資料項目**，其中 **1,739 / 1,745 款主遊戲**有圖片。其餘 75 個具名項目的 BGG 主要圖片為通用缺圖圖示，且尚未補得可確認的封面，因此明確顯示「來源暫無封面」。其中主遊戲為 Aeris、Anou、Join the Resistance!、Qualified!、Secrets of the Lost Dungeon、High Frontier Lite；另外 3 筆原清單佔位項目本身不是具名桌遊。BGG 的通用藍色缺圖盒圖不當作封面發布，也不以其他遊戲的圖片補入。若本地圖片無法載入，頁面會顯示遊戲名稱與載入失敗說明。
+
+### 更新出版社
+
+```bash
+python3 scripts/build_publishers.py
+```
+
+使用與封面下載相同的 `Pillow`、`requests` 環境。程式讀取兩份清單的出版社欄位，從 BGG 遊戲資料的出版社關聯核對公司 ID，再下載該公司的主要圖片至 `assets/publishers/`。主要圖片未設定時，會再查該公司圖庫中明確標為 Logo 的圖片。快取會保留，重跑僅補充新的資料或失敗項目；`--limit 12` 可少量試跑，`--retry-missing` 可重新查找缺圖出版社。
+
+分類依資料收錄的出版社欄位（通常為第一家），不擴充為 BGG 列出的所有地區出版商。欄位內明列多家出版社者分別歸類，含逗號的單一公司名稱則保留完整。已確認的別名與來源錯置集中在腳本的名稱對應表；例如 Solar Sphere 原欄位誤填設計師，依 BGG 遊戲 329228 歸入 Dranda Games。原清單的 Worms: The Board Game 另已修正為正確遊戲 ID 397788 與對應封面。
+
+出版社圖片依 BGG 公司 ID 儲存與核對；沒有圖片或無法確認身分時會顯示明確替代文字，不借用別家出版社圖片。未提供出版社與自行出版等來源分類仍可瀏覽。更新後請一併提交腳本、`publishers.json`、關聯快取及新增的出版社圖片。
+
+目前兩份清單合計 700 個出版社／來源分類，取得 659 份 BGG 圖片，另外 40 家 BGG 未提供可確認的主要圖片或 Logo，1 類為出版社資料未提供。各分頁會依自身收錄項目建立目錄，不顯示另一份清單才有的出版社。
 
 ## GitHub Pages 部署
 
