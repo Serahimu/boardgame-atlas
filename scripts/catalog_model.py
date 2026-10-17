@@ -21,3 +21,25 @@ def add_identity(games, dataset):
             raise ValueError('Duplicate item identity: ' + game['name'] + '; add distinct version URL')
         seen.add(game['stableId'])
     return games
+
+def add_relations(games):
+    by_id = {g['id']: g for g in games}
+    by_name = {}
+    for game in games:
+        by_name.setdefault(game['name'], []).append(game)
+    for game in games:
+        if 'parentIds' not in game:
+            parents = by_name.get(game.get('parent'), []) if game.get('parent') else []
+            if len(parents) > 1:
+                raise ValueError('Ambiguous parent: ' + game['name'])
+            game['parentIds'] = [p['id'] for p in parents]
+        game.setdefault('relatedIds', [])
+    for game in games:
+        for parent_id in game['parentIds']:
+            parent = by_id[parent_id]
+            if game['id'] not in parent['relatedIds']:
+                parent['relatedIds'].append(game['id'])
+    for game in games:
+        game['parentStableIds'] = [by_id[i]['stableId'] for i in game['parentIds']]
+        game['relatedStableIds'] = [by_id[i]['stableId'] for i in game['relatedIds']]
+    return games
