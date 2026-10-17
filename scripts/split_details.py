@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from dataset_config import configured_datasets
 ROOT = Path(__file__).resolve().parents[1]
-DETAIL_FIELDS = {'originals','source','officialSearch','checked','notes','gallery','version','funding','edition','documentSummary','documentStatus','priorityDocument','parentBggid','people','tags','provenance','missingValues','dataWarnings','editorialOverride'}
+DETAIL_FIELDS = {'metrics','imageSource','relatedStableIds','parentStableIds','originals','source','officialSearch','checked','notes','gallery','version','funding','edition','documentSummary','documentStatus','priorityDocument','parentBggid','people','tags','provenance','missingValues','dataWarnings','editorialOverride'}
 def main():
     for config in configured_datasets():
         dataset=config['id']
@@ -13,6 +13,9 @@ def main():
         for game in games:
             index=int(game['stableId'][-2:],16)%32
             detail={key:game.pop(key) for key in list(game) if key in DETAIL_FIELDS}
+            if 'releaseInfo' in game:
+                detail['releaseInfo'] = game['releaseInfo']
+                game['releaseInfo'] = {key:game['releaseInfo'][key] for key in ['date','precision','status']}
             shards[index][game['stableId']]=detail
             game['detailPath']=f'data/details/{dataset}/{index}.json'
         for index,shard in enumerate(shards):
