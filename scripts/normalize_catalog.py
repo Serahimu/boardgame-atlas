@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+import json
+from pathlib import Path
+from catalog_model import add_identity
+ROOT = Path(__file__).resolve().parents[1]
+def main():
+    migrations = {}
+    for dataset, file in [('catalog', 'catalog.json'), ('essen2026', 'essen.json')]:
+        path = ROOT / 'data' / file
+        games = add_identity(json.loads(path.read_text()), dataset)
+        path.write_text(json.dumps(games, ensure_ascii=False, separators=(',', ':')) + '\n')
+        migrations[dataset] = {str(g['id']): g['stableId'] for g in games}
+    (ROOT / 'data/id-migrations.json').write_text(json.dumps({'schemaVersion': 1, 'datasets': migrations}, ensure_ascii=False, separators=(',', ':')) + '\n')
+if __name__ == '__main__': main()
