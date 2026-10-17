@@ -7,16 +7,13 @@ async function loadJSON(path){const response=await fetch(path);if(!response.ok)t
 
 const data=(isEssen?await loadJSON('data/essen.json'):(document.getElementById('game-data')?JSON.parse(document.getElementById('game-data').textContent):await loadJSON('data/catalog.json'))), mains=data.filter(d=>d.kind==='主遊戲'), $=id=>document.getElementById(id), esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])), num=v=>v!==null&&v!==''&&Number.isFinite(Number(v))?Number(v):null, val=v=>v===null||v===undefined||v===''?'未提供':String(v), safeurl=v=>/^https:\/\//.test(v||'')?esc(v):'#';
 const byId=new Map(data.map(d=>[d.id,d]));
-const publisherData=await loadJSON('data/publishers.json').catch(error=>{console.error(error);return null});
-const publisherRecords=new Map((publisherData?.publishers||[]).map(p=>[p.key,p]));
-const publishers=new Map();
-for(const game of data.filter(d=>d.kind!=='佔位項目')){
- const source=(game.publisher||'').trim();
- const keys=publisherData?.sources[source]||[source?'unresolved:'+source:'unknown'];
- for(const key of keys){
-  if(!publishers.has(key))publishers.set(key,{...(publisherRecords.get(key)||{key,name:source||'出版社未提供'}),games:[]});
-  publishers.get(key).games.push(game);
- }
+let publisherData=null,publisherLoading=false,publisherFailed=false;
+const publisherRecords=new Map(),publishers=new Map();
+async function ensurePublishers(){
+ if(publisherData||publisherLoading)return;publisherLoading=true;publisherFailed=false;
+ try{publisherData=await loadJSON('data/publishers.json');for(const p of publisherData.publishers||[])publisherRecords.set(p.key,p);
+ for(const game of data.filter(d=>d.kind!=='佔位項目')){const source=(game.publisher||'').trim();for(const key of publisherData.sources[source]||[source?'unresolved:'+source:'unknown']){if(!publishers.has(key))publishers.set(key,{...(publisherRecords.get(key)||{key,name:source||'出版社未提供'}),games:[]});publishers.get(key).games.push(game)}}
+ }catch(error){publisherFailed=true;console.error(error)}finally{publisherLoading=false;if(catalogMode==='publishers')applyRoute()}
 }
 function publisherNames(game){const source=(game.publisher||'').trim();return (publisherData?.sources[source]||[]).map(key=>publisherRecords.get(key)?.name).filter(Boolean).join('、')||val(game.publisher)}
 let catalogMode='games',publisherKey=null;
@@ -78,8 +75,8 @@ function pageControls(total){
 }
 function renderPublishers(query){
  if(!publisherData){
-  $('result').textContent='出版社資料載入失敗';$('pages').innerHTML='';
-  $('catalog').innerHTML='<div class="empty"><h3>無法載入出版社清單</h3><p>請重新整理頁面再試一次，或使用本機 HTTP 伺服器預覽。</p><button class="textbtn" data-reload>重新載入</button></div>';return;
+  $('result').textContent=publisherLoading?'正在載入出版社…':'出版社資料載入失敗';$('pages').innerHTML='';
+  $('catalog').innerHTML='<div class="empty"><h3>${publisherLoading?'正在載入出版社清單…':'無法載入出版社清單'}</h3><p>請重新整理頁面再試一次，或使用本機 HTTP 伺服器預覽。</p><button class="textbtn" data-retry-publishers>重試出版社</button></div>';return;
  }
  const found=[...publishers.values()].filter(p=>!query||p.name.toLocaleLowerCase().includes(query)||p.games.some(g=>g.name.toLocaleLowerCase().includes(query)));
  found.sort((a,b)=>($('sort').value==='publisher-count'?b.games.length-a.games.length:0)||a.name.localeCompare(b.name,'zh-Hant'));
@@ -132,6 +129,7 @@ function applyRoute(){
  const oldDirectory=catalogMode==='publishers'&&!publisherKey;
  if(oldDirectory)directoryState={search:$('search').value,page,sort:$('sort').value};else gameSort=$('sort').value;
  publisherKey=null;catalogMode=location.hash==='#publishers'||location.hash.startsWith('#publisher=')?'publishers':'games';
+ if(catalogMode==='publishers'&&!publisherData&&!publisherLoading&&!publisherFailed)ensurePublishers();
  if(location.hash.startsWith('#publisher=')){
   try{const key=decodeURIComponent(location.hash.slice(11));if(publishers.has(key))publisherKey=key}catch{}
  }
@@ -159,11 +157,11 @@ function applyRoute(){
 }
 window.addEventListener('hashchange',applyRoute);window.addEventListener('popstate',()=>{applyRoute();requestAnimationFrame(()=>window.scrollTo(0,history.state?.scroll||0))});
 document.addEventListener('click',event=>{
- const button=event.target.closest('[data-mode],[data-publisher],[data-all-publishers],[data-reload]');if(!button)return;
+ const button=event.target.closest('[data-mode],[data-publisher],[data-all-publishers],[data-reload],[data-retry-publishers]');if(!button)return;
  if(button.hasAttribute('data-mode')){location.hash=button.dataset.mode==='publishers'?'publishers':'';}
  if(button.hasAttribute('data-publisher'))location.hash='publisher='+encodeURIComponent(button.dataset.publisher);
  if(button.hasAttribute('data-all-publishers'))location.hash='publishers';
- if(button.hasAttribute('data-reload'))location.reload();
+ if(button.hasAttribute('data-reload'))location.reload();if(button.hasAttribute('data-retry-publishers')){publisherFailed=false;ensurePublishers();render()}
 });
 
 function link(url,label,primary=false){return url?`<a class="link${primary?' primary':''}" href="${safeurl(url)}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`:''}
