@@ -1,0 +1,4 @@
+'use strict';
+const escapeText=value=>String(value??'未提供').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function loadVersions(){try{const response=await fetch('data/datasets.json');if(!response.ok)throw Error(response.status);const data=await response.json();document.getElementById('versions').innerHTML='<dl class="detailsgrid">'+data.datasets.map(d=>`<div class="datum"><dt>${escapeText(d.label)}</dt><dd>資料版本 ${escapeText(d.id)} · schema ${escapeText(data.schemaVersion)}<br>來源快照 ${escapeText(d.snapshotDate)}<br>${escapeText(d.source)}</dd></div>`).join('')+'</dl>';document.getElementById('retry-versions').hidden=true}catch{document.getElementById('versions').textContent='資料版本載入失敗，請重試。';document.getElementById('retry-versions').hidden=false}}
+document.getElementById('retry-versions').onclick=loadVersions;loadVersions();

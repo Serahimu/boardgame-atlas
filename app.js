@@ -1,6 +1,7 @@
 'use strict';
 (async function () {
 const isEssen=document.body.dataset.collection==='essen';
+const updatesLink=document.createElement('a');updatesLink.href='updates.html';updatesLink.textContent='資料版本與更新';document.querySelector('footer').append(updatesLink);
 let PAGE_SIZE=48;
 document.addEventListener('error',event=>{const img=event.target;if(!(img instanceof HTMLImageElement))return;if(img.closest('.cover')){const fallback=document.createElement('span');fallback.className='placeholder';fallback.textContent=img.alt.replace(/ (?:封面|出版社圖片)$/,'');const label=document.createElement('small');label.textContent=img.alt.includes('出版社圖片')?'出版社圖片暫時無法載入':'封面暫時無法載入';fallback.append(label);img.replaceWith(fallback)}else if(img.closest('.related,.publisher-heading'))img.hidden=true},true);
 async function loadJSON(path){const response=await fetch(path);if(!response.ok)throw new Error(`HTTP ${response.status}`);return response.json()}
@@ -81,7 +82,7 @@ function renderPublishers(query){
  const found=[...publishers.values()].filter(p=>!query||p.name.toLocaleLowerCase().includes(query)||p.games.some(g=>g.name.toLocaleLowerCase().includes(query)));
  found.sort((a,b)=>($('sort').value==='publisher-count'?b.games.length-a.games.length:0)||a.name.localeCompare(b.name,'zh-Hant'));
  $('result').textContent=`${found.length} 家出版社 / 共 ${publishers.size} 家 · 僅顯示本清單收錄項目`;
- pageControls(found.length);
+ pageControls(found.length);if(!restoring)saveRoute();
  $('catalog').innerHTML=found.length?found.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(p=>`<button class="card publisher-card" data-logo-background="${p.imageBackground||'light'}" data-publisher="${esc(p.key)}" aria-label="查看 ${esc(p.name)} 的收錄桌遊"><div class="cover">${p.image?`<img src="${esc(p.image)}" alt="${esc(p.name)} 出版社圖片" loading="lazy">`:`<span class="placeholder">${esc(p.name)}<small>${p.status==='unknown'?'資料未提供出版社':'BGG 暫無出版社圖片'}</small></span>`}</div><div><h3>${esc(p.name)}</h3><div class="meta">${p.games.filter(g=>g.kind==='主遊戲').length} 款主遊戲 · ${p.games.length} 項收錄</div></div><div class="cardfoot"><span class="pill">探索收錄桌遊 →</span></div></button>`).join(''):'<div class="empty"><h3>沒有符合條件的出版社</h3><p>試試其他出版社或遊戲名稱。</p><button class="textbtn" data-reset>清除搜尋</button></div>';
 }
 const sidebar=document.querySelector('.sidebar'),filterButton=document.createElement('button');filterButton.id='filter-toggle';filterButton.className='filter-toggle';filterButton.textContent='篩選條件';filterButton.setAttribute('aria-expanded','false');sidebar.before(filterButton);
@@ -131,7 +132,7 @@ function render(){
  const sort=$('sort').value;
  filtered.sort((a,b)=>{const n=(d,key,missing)=>num(d[key])??missing;return (sort==='relevance'?CatalogCore.relevance(searchIndex.get(b.id),query)-CatalogCore.relevance(searchIndex.get(a.id),query):sort==='source'?(num(a.sourceOrder)??999999)-(num(b.sourceOrder)??999999):sort==='rating'?n(b,'rating',-1)-n(a,'rating',-1):sort==='year'?n(b,'year',-1)-n(a,'year',-1):sort==='weight'?n(a,'weight',99)-n(b,'weight',99):sort==='relations'?family(b).length-family(a).length:0)||a.name.localeCompare(b.name,'en')});
  $('result').textContent=publisherKey?`${filtered.length} / ${candidates.length} 項收錄桌遊`:`${filtered.length} 款${$('relation').value==='佔位項目'?'佔位項目':'主遊戲'} / 共 ${mains.length} 款主遊戲`;
- pageControls(filtered.length);
+ pageControls(filtered.length);if(!restoring)saveRoute();
  $('catalog').innerHTML=filtered.length?filtered.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(d=>`<button class="card" data-open="${d.id}" aria-label="查看 ${esc(d.name)} 詳情">${cover(d)}<div><h3>${esc(d.name)}</h3><div class="meta">${esc(val(d.year))} · ${esc(val(d.players).replace(/ Players?/g,''))} 人<br>${esc(val(d.time))} · 重度 ${num(d.weight)===null?'未提供':num(d.weight).toFixed(2)}</div></div><div class="cardfoot">${publisherKey?`<span class="pill">${esc(d.kind)}</span>`:''}${view==='list'?`<span class="pill">BGG ${score(d)}</span>`:''}${counts(d)}${query?`<span class="pill match">${matches(d,query)?Object.entries(searchIndex.get(d.id)).filter(([,v])=>CatalogCore.match({text:v},query)).map(([k])=>({name:'名稱',designer:'設計師',publisher:'出版社',mechanism:'機制',category:'分類'}[k])).join('、')||'多欄位':'相關項目'}符合搜尋</span>`:''}</div></button>`).join(''):'<div class="empty"><h3>沒有符合條件的遊戲</h3><p>試試其他關鍵字，或重設篩選條件。</p><button class="textbtn" data-reset>清除所有條件</button></div>';
 }
 const routeFields=['search','players','time','weight','rating','relation','sort','search-field','year-filter','missing-values','catalog-scope','taxonomy-mode','excluded-tags'];
