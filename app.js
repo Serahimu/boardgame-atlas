@@ -76,7 +76,7 @@ function pageControls(total){
 function renderPublishers(query){
  if(!publisherData){
   $('result').textContent=publisherLoading?'正在載入出版社…':'出版社資料載入失敗';$('pages').innerHTML='';
-  $('catalog').innerHTML='<div class="empty"><h3>${publisherLoading?'正在載入出版社清單…':'無法載入出版社清單'}</h3><p>請重新整理頁面再試一次，或使用本機 HTTP 伺服器預覽。</p><button class="textbtn" data-retry-publishers>重試出版社</button></div>';return;
+  $('catalog').innerHTML=`<div class="empty"><h3>${publisherLoading?'正在載入出版社清單…':'無法載入出版社清單'}</h3><p>請重新整理頁面再試一次，或使用本機 HTTP 伺服器預覽。</p><button class="textbtn" data-retry-publishers>重試出版社</button></div>`;return;
  }
  const found=[...publishers.values()].filter(p=>!query||p.name.toLocaleLowerCase().includes(query)||p.games.some(g=>g.name.toLocaleLowerCase().includes(query)));
  found.sort((a,b)=>($('sort').value==='publisher-count'?b.games.length-a.games.length:0)||a.name.localeCompare(b.name,'zh-Hant'));
