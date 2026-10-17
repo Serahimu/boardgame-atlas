@@ -1,0 +1,17 @@
+/* Exploration and sourced document tools. */
+'use strict';
+window.AtlasEnhancements=(()=>{
+let api, games=[], dataset, chosen=new Set(), drawn=new Set(), resources={games:{},mechanisms:{}};
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const id=g=>String(g.stableId||g.id), split=v=>Array.isArray(v)?v:String(v||'').split(/[、；;|]/).map(x=>x.trim()).filter(Boolean), nums=v=>(String(v||'').match(/\d+(?:\.\d+)?/g)||[]).map(Number), missing=v=>v===null||v===undefined||v===''?'未提供':v;
+const link=(url,label)=>/^https?:\/\//.test(url||'')?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`:'';
+function panel(title,body){document.getElementById('explore-result').innerHTML=`<h3>${esc(title)}</h3>${body}`;}
+function rows(list){return list.map(g=>`<button data-explore-open="${esc(id(g))}">${esc(g.name)}</button>`).join(' ')||'<p>沒有符合條件的項目。</p>';}
+function init(e){api=window.Atlas;games=e.detail.data;dataset=e.detail.dataset;const tools=document.createElement('details');tools.className='exploration-tools';tools.innerHTML='<summary>挑遊戲與文件工具</summary><div id="explore-actions"></div><div id="explore-result" aria-live="polite"></div>';document.getElementById('catalog-section').before(tools);document.addEventListener('click',event=>{const b=event.target.closest('[data-explore-open]');if(b)api.show(games.find(g=>id(g)===b.dataset.exploreOpen)?.id)});fetch('data/editorial.json').then(r=>r.json()).then(r=>resources=r).catch(()=>{});}
+document.addEventListener('atlas:ready',init);
+const action=(label,run)=>{const b=document.createElement('button');b.textContent=label;b.onclick=run;document.getElementById('explore-actions').append(b)};
+const ready=fn=>document.addEventListener('atlas:ready',()=>queueMicrotask(fn));
+return {ready,action,panel,rows,esc,id,split,nums,link,missing,get games(){return games},get api(){return api},get resources(){return resources},get chosen(){return chosen},get drawn(){return drawn},get dataset(){return dataset}};
+})();
+
+(()=>{const E=AtlasEnhancements;E.ready(()=>E.action('比較 2–4 款',()=>{E.panel('比較遊戲','<p>以目前篩選結果選擇 2–4 款；未提供資料不補推估。</p><select id="compare-pick" multiple size="8" aria-label="選擇比較遊戲">'+E.api.filtered.map(g=>`<option value="${E.esc(E.id(g))}">${E.esc(g.name)}</option>`).join('')+'</select><button id="compare-run">比較</button><div id="compare-output"></div>');document.getElementById('compare-run').onclick=()=>{const ids=[...document.getElementById('compare-pick').selectedOptions].map(o=>o.value),list=E.games.filter(g=>ids.includes(E.id(g)));document.getElementById('compare-output').innerHTML=list.length<2||list.length>4?'<p>請選擇 2–4 款。</p>':'<div class="comparison-wrap"><table><thead><tr><th>資料</th>'+list.map(g=>`<th>${E.esc(g.name)}</th>`).join('')+'</tr></thead><tbody>'+[['players','人數'],['time','時間'],['weight','重度'],['rating','BGG 評分'],['mechanismZh','機制'],['documentCount','文件數']].map(([key,label])=>`<tr><th>${label}</th>${list.map(g=>`<td>${E.esc(E.missing(g[key]))}</td>`).join('')}</tr>`).join('')+'</tbody></table></div>'}}))})();
