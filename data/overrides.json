@@ -82,7 +82,9 @@
             ],
             "type": "本機資料夾無重音拼法",
             "source": "翻譯好的規則書/Orleans/Base_Rules_2023_CHT.pdf",
-            "checked": "2026-10-18"
+            "checked": "2026-10-18",
+            "sourceSha256": "9f535339744ced8b2411dc614ee73e9e79d8e27aee56fc4883f4d08dcb193a5e",
+            "sourceVerified": true
           }
         ]
       }
@@ -105,7 +107,9 @@
             ],
             "type": "本機資料夾無重音拼法",
             "source": "翻譯好的規則書/Orleans/Base_Rules_2023_CHT.pdf",
-            "checked": "2026-10-18"
+            "checked": "2026-10-18",
+            "sourceSha256": "9f535339744ced8b2411dc614ee73e9e79d8e27aee56fc4883f4d08dcb193a5e",
+            "sourceVerified": true
           }
         ]
       }
@@ -117,7 +121,9 @@
         "nameZh": "王者之劍",
         "nameZhType": "本機規則書譯名，非已查證出版譯名",
         "nameZhSource": "翻譯好的規則書/Excalibur/Excalibur_Rulebook_CHT.pdf#page=1",
-        "nameChecked": "2026-10-18"
+        "nameChecked": "2026-10-18",
+        "nameZhSourceSha256": "fdc25da0894c3ca3f0634637e3a699de2baa42624b5d665136ca6dbf96937acd",
+        "nameZhSourceVerified": true
       }
     },
     "essen2026:f8567f91ab148c55e137": {
@@ -127,7 +133,9 @@
         "nameZh": "王者之劍",
         "nameZhType": "本機規則書譯名，非已查證出版譯名",
         "nameZhSource": "翻譯好的規則書/Excalibur/Excalibur_Rulebook_CHT.pdf#page=1",
-        "nameChecked": "2026-10-18"
+        "nameChecked": "2026-10-18",
+        "nameZhSourceSha256": "fdc25da0894c3ca3f0634637e3a699de2baa42624b5d665136ca6dbf96937acd",
+        "nameZhSourceVerified": true
       }
     },
     "catalog:0fb3ca0c9e2519c312f2": {
@@ -144,7 +152,9 @@
             ],
             "type": "本機資料夾與規則檔名縮寫",
             "source": "翻譯好的規則書/Manhattan_Project/MP_Rulebook_EN_CHT.pdf",
-            "checked": "2026-10-18"
+            "checked": "2026-10-18",
+            "sourceSha256": "e7fb31fe2604d9adb89517438026b2dfbd1c234f371d9a56bbfa218030b94cee",
+            "sourceVerified": true
           }
         ]
       }
@@ -163,7 +173,9 @@
             ],
             "type": "本機規則檔名短名",
             "source": "翻譯好的規則書/Energy_Empire/Energy_Empire_English_Rulebook_small_CHT.pdf",
-            "checked": "2026-10-18"
+            "checked": "2026-10-18",
+            "sourceSha256": "071932460da5151a2be8a72cfd3f0ea60a7b7b4bbe98ed458e468939715145a5",
+            "sourceVerified": true
           }
         ]
       }
@@ -182,7 +194,9 @@
             ],
             "type": "本機規則檔名短名",
             "source": "翻譯好的規則書/Inventions/Inventions Rules v7_zho-CN_CHT.pdf",
-            "checked": "2026-10-18"
+            "checked": "2026-10-18",
+            "sourceSha256": "27cdbb2b16be60fe12d99c487b3403736b1874404e6400e662d5b22f0784ab14",
+            "sourceVerified": true
           }
         ]
       }
@@ -201,7 +215,9 @@
             ],
             "type": "本機規則檔名短名",
             "source": "翻譯好的規則書/Trickerion/Trickerion-Retail-version-Revised-Rulebook_2019-web_CHT.pdf",
-            "checked": "2026-10-18"
+            "checked": "2026-10-18",
+            "sourceSha256": "6d5077dcdec38bf72d6d535a3bbcc01718c1cedbe9d0dad23c3747d6534c30d5",
+            "sourceVerified": true
           }
         ]
       }
@@ -220,7 +236,9 @@
             ],
             "type": "本機基本規則檔名短名",
             "source": "翻譯好的規則書/Avalon/AvalonRuleBook(Core)_v2_CHT.pdf",
-            "checked": "2026-10-18"
+            "checked": "2026-10-18",
+            "sourceSha256": "628ac1878e1e608af5746bbbb8adde8979de29c3d8a9675f307448d6880cb1a9",
+            "sourceVerified": true
           }
         ]
       }
@@ -239,7 +257,9 @@
             ],
             "type": "本機基本規則檔名短名",
             "source": "翻譯好的規則書/Avalon/AvalonRuleBook(Core)_v2_CHT.pdf",
-            "checked": "2026-10-18"
+            "checked": "2026-10-18",
+            "sourceSha256": "628ac1878e1e608af5746bbbb8adde8979de29c3d8a9675f307448d6880cb1a9",
+            "sourceVerified": true
           }
         ]
       }
@@ -260,7 +280,9 @@
             ],
             "type": "本機資料夾短名與規則檔名縮寫",
             "source": "翻譯好的規則書/Chicago_1875/CotBS_Rulebook_EN_V30_WEB_CHT.pdf",
-            "checked": "2026-10-18"
+            "checked": "2026-10-18",
+            "sourceSha256": "431cbe45b806fc382fb51addf8968524076e9a0a30779fc06d124f7c01b948a9",
+            "sourceVerified": true
           }
         ]
       }
@@ -281,7 +303,9 @@
             ],
             "type": "本機資料夾短名與檔名標點正規化",
             "source": "翻譯好的規則書/Rawr ’n Write/rawr_n_write_retail_rulebook-min_CHT.pdf",
-            "checked": "2026-10-18"
+            "checked": "2026-10-18",
+            "sourceSha256": "a0b8392789e19c03cc27a7ee789ae271a965b9e5018da77c3222ddfb7a724ffe",
+            "sourceVerified": true
           }
         ]
       }
@@ -300,7 +324,9 @@
             ],
             "type": "本機規則檔名短名",
             "source": "翻譯好的規則書/Voynich/Voynich-Rulebook-EN_CHT.pdf",
-            "checked": "2026-10-18"
+            "checked": "2026-10-18",
+            "sourceSha256": "877b3338bb024433d2c2fb7f76fd4a6b24de5e812c0180a22b79dfa2d778a1ae",
+            "sourceVerified": true
           }
         ]
       }
@@ -319,7 +345,9 @@
             ],
             "type": "本機規則檔名短名",
             "source": "翻譯好的規則書/Voynich/Voynich-Rulebook-EN_CHT.pdf",
-            "checked": "2026-10-18"
+            "checked": "2026-10-18",
+            "sourceSha256": "877b3338bb024433d2c2fb7f76fd4a6b24de5e812c0180a22b79dfa2d778a1ae",
+            "sourceVerified": true
           }
         ]
       }
@@ -338,7 +366,9 @@
             ],
             "type": "本機規則檔名短名",
             "source": "翻譯好的規則書/Moonsaga/MoonsagaRulesheet-Web_CHT.pdf",
-            "checked": "2026-10-18"
+            "checked": "2026-10-18",
+            "sourceSha256": "8a5e4dd26d757ebc3c36050fda6ea817120f35d93ca9248eed8d40424c08478e",
+            "sourceVerified": true
           }
         ]
       }
@@ -357,7 +387,9 @@
             ],
             "type": "本機資料夾標點正規化",
             "source": "翻譯好的規則書/Brass_Birmingham/Brass-P-Rulebook-ENG_CHT.pdf",
-            "checked": "2026-10-18"
+            "checked": "2026-10-18",
+            "sourceSha256": "a729310c3e0d03df5779e4ec52af225a78137e9df1a7e8c6964e55c833f6b01b",
+            "sourceVerified": true
           }
         ]
       }

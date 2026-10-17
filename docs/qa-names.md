@@ -15,4 +15,7 @@
 
 BA-002 已補 12 款原清單遊戲的實際可驗收別名：AFFO、Manhattan Project、Energy Empire、Inventions、Trickerion、Avalon、Chicago 1875／CotBS、Rawr ’n Write／Rawr n Write、Voynich、Moonsaga、Orleans、Brass Birmingham。AFFO 是 BGA 明示縮寫，其餘來自現有規則書檔名或資料夾短名，來源逐筆列於 `aliasSources`。不把文件版號或 `.pdf` 當成遊戲名。相同原名的另一資料集主遊戲同時套用；擴充、新版不同名稱未自動套用主遊戲中文名。
 
-驗收：`python3 scripts/build.py`（重建及 preflight）；`python3 tests/test_name_overrides.py` 驗證 6 款中文名、至少 10 款別名、來源檔案存在、來源性質完整、重建後名稱欄位留在可搜尋清單。網站可搜尋「奧丁的盛宴」「阿納克遺跡」「王者之劍」「AFFO」「CotBS」「Moonsaga」。實際瀏覽器搜尋整合由主流程驗收。
+驗收：`python3 scripts/build.py`（重建及 preflight）；`python3 tests/test_name_overrides.py` 驗證 6 款中文名、至少 10 款別名、本機來源 SHA-256、已查核標記、日期與來源性質完整、重建後名稱欄位留在可搜尋清單。網站可搜尋「奧丁的盛宴」「阿納克遺跡」「王者之劍」「AFFO」「CotBS」「Moonsaga」。實際瀏覽器搜尋整合由主流程驗收。
+
+
+CI 不包含私人規則書，因此本機來源另保存 `sourceSha256`／`nameZhSourceSha256` 與明確的 `sourceVerified`／`nameZhSourceVerified`。測試在任何環境都強制檢查 64 位十六進位雜湊、已查核標記、來源性質、查核日期與安全相對路徑；本機檔案存在時再比對實際 SHA-256。CI 依已提交的查核證據驗收，不要求將私人 PDF 放進公開倉庫。獨立測試以不存在的來源根目錄模擬 GitHub runner，確認缺雜湊／未查核仍失敗；來源存在但被修改時亦會失敗。
