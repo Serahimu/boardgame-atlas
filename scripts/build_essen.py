@@ -36,9 +36,15 @@ def read_rows(archive, index, strings):
 
 
 def main():
-    with ZipFile(SOURCE) as archive:
-        strings = ["".join(node.itertext()) for node in ET.fromstring(archive.read("xl/sharedStrings.xml"))]
-        games, documents, relations, originals, notes = [read_rows(archive, i, strings) for i in range(1, 6)]
+    from workbook import read_workbook, named_rows, HEADERS
+    books = read_workbook(SOURCE)
+    # Auxiliary sheets also locate their header by required names, not a row number.
+    def auxiliary(name, width):
+        rows = books[name]
+        required = {'文件清單': ['BGG ID','桌遊項目名稱','文件名稱','文件類別','來源標示語言','檔名／標題辨識語言','適用範圍','下載入口／文件 URL','開啟下載','文件來源','來源頁 URL','來源標示日期','連結查核說明'], '主遊戲關聯': ['項目 BGG ID','項目名稱','項目類型','主遊戲 BGG ID','主遊戲名稱'], '原清單對照': ['原清單序號','原始桌遊項目名稱','原始 BGG 項目網址','來源頁碼','原始備註','BGG ID','項目類型','主遊戲桌遊','文件查找結果'], '整理說明': ['項目','說明']}[name]
+        return [{chr(65+i): r.get(h, '') for i, h in enumerate(required)} for r in named_rows(rows, required)]
+    games = [{(chr(65+i) if i < 26 else 'A'+chr(65+i-26)): r.get(h, '') for i,h in enumerate(HEADERS)} for r in named_rows(books['BGG完整清單'], HEADERS)]
+    documents, relations, originals, notes = [auxiliary(n, w) for n,w in [('文件清單',13),('主遊戲關聯',5),('原清單對照',9),('整理說明',2)]]
     keys = ["name", "url", "year", "rating", "players", "type", "category", "mechanism", "time", "weight", "gallery", "designer", "artist", "publisher", "funding", "release", "edition", "version", "kind", "parent", "typeZh", "categoryZh", "mechanismZh", "documentSummary", "documentStatus", "priorityDocument", "sourceOrder", "bggid", "source", "officialSearch", "checked", "notes", "parentBggid"]
     columns = [chr(65 + i) for i in range(26)] + ["A" + chr(65 + i) for i in range(7)]
     source_rows = defaultdict(list)
@@ -50,8 +56,7 @@ def main():
     # The workbook's gallery URLs are HTML pages, not image files.
     # Prefer verified local cover assets; retain existing embedded covers as a fallback.
     import re
-    html = (ROOT / "index.html").read_text(encoding="utf-8")
-    existing = json.loads(re.search(r'<script id="game-data" type="application/json">(.*?)</script>', html, re.S)[1])
+    existing = json.loads((ROOT / 'data/catalog.json').read_text())
     images = {str(d["bggid"]): d["image"] for d in existing if d.get("image")}
     manifest_path = ROOT / "data/cover-manifest.json"
     covers = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
