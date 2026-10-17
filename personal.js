@@ -71,3 +71,5 @@ if(window.Atlas?.data)AtlasPersonal.init(window.Atlas.data);
 {const A=window.AtlasPersonal;A.features.push({title:'攜帶負擔',form:r=>A.input('boxSize','盒子尺寸（公分，長×寬×高）','text',r.boxSize)+A.input('weightKg','重量 kg','number',r.weightKg??'','min="0" step="0.01"'),read:fd=>({boxSize:fd.get('boxSize'),weightKg:fd.get('weightKg')?Number(fd.get('weightKg')):null}),summary:rows=>`<section><h3>攜帶負擔</h3><p>已填重量總計 ${rows.reduce((n,r)=>n+(Number(r.weightKg)||0)*(Number(r.quantity)||1),0).toFixed(2)} kg；未知重量不計入。</p></section>`});}
 
 {const A=window.AtlasPersonal;A.features.push({title:'團購分工（僅本機）',form:r=>A.input('buyer','購買負責人','text',r.buyer)+A.input('quantity','數量','number',r.quantity||1,'min="1" step="1"')+A.input('recipient','代購對象','text',r.recipient)+A.select('handoff','取貨進度',['','待購買','已購買','已取貨','已交付'],r.handoff),read:fd=>Object.fromEntries(['buyer','quantity','recipient','handoff'].map(k=>[k,k==='quantity'?Number(fd.get(k)):fd.get(k)]))});}
+
+{const A=window.AtlasPersonal;A.features.push({title:'列印清單',toolbar:()=>A.button('print','列印展館清單'),action:a=>{if(a!=='print')return;const route=A.features.find(f=>f.title==='逛展路線');route.action('route');window.print()}});}
