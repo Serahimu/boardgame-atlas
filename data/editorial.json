@@ -1,6 +1,37 @@
 {
   "schemaVersion": 1,
-  "games": {},
+  "games": {
+    "catalog:55fec6f1f8a665793f28": {
+      "translations": [
+        {
+          "title": "Cubaneo 繁中規則（本機私人檔案）",
+          "scope": "主遊戲",
+          "status": "待校對",
+          "public": false,
+          "source": "本機原譯文精確檔名配對、PDF標題與公開BGG項目人工核對",
+          "originalUrl": "https://boardgamegeek.com/boardgame/472208/cubaneo",
+          "localFileVerified": true,
+          "verifiedAt": "2026-10-18",
+          "notes": "已核對指定來源頁與繁中頁面；非全書校對完成。"
+        }
+      ]
+    },
+    "catalog:1ffeac6b2a68ec771f85": {
+      "translations": [
+        {
+          "title": "Fishing 2 繁中規則（本機私人檔案）",
+          "scope": "主遊戲",
+          "status": "待校對",
+          "public": false,
+          "source": "本機原譯文精確檔名配對、PDF標題與公開BGG項目人工核對",
+          "originalUrl": "https://boardgamegeek.com/boardgame/468799/fishing-2",
+          "localFileVerified": true,
+          "verifiedAt": "2026-10-18",
+          "notes": "已核對指定來源頁與繁中頁面；非全書校對完成。"
+        }
+      ]
+    }
+  },
   "mechanisms": {
     "牌庫／袋庫／池庫構築": {
       "english": "Deck, Bag, and Pool Building",
