@@ -8,7 +8,20 @@
         "nameZh": "奧丁的盛宴",
         "nameZhType": "BGA繁中平台顯示名",
         "nameZhSource": "https://zh.boardgamearena.com/gamepanel?game=feastforodin",
-        "nameChecked": "2026-10-18"
+        "nameChecked": "2026-10-18",
+        "aliases": [
+          "AFFO"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "AFFO"
+            ],
+            "type": "平台明示縮寫",
+            "source": "https://zh.boardgamearena.com/gamepanel?game=feastforodin",
+            "checked": "2026-10-18"
+          }
+        ]
       }
     },
     "catalog:170df7a48b2e05c77763": {
@@ -58,7 +71,20 @@
         "nameZh": "奧爾良",
         "nameZhType": "繁中出版商商品名",
         "nameZhSource": "https://www.swanpanasia.com/products/orleans",
-        "nameChecked": "2026-10-18"
+        "nameChecked": "2026-10-18",
+        "aliases": [
+          "Orleans"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "Orleans"
+            ],
+            "type": "本機資料夾無重音拼法",
+            "source": "翻譯好的規則書/Orleans/Base_Rules_2023_CHT.pdf",
+            "checked": "2026-10-18"
+          }
+        ]
       }
     },
     "essen2026:9bcb809e8cd5f6bfe7eb": {
@@ -68,7 +94,20 @@
         "nameZh": "奧爾良",
         "nameZhType": "繁中出版商商品名",
         "nameZhSource": "https://www.swanpanasia.com/products/orleans",
-        "nameChecked": "2026-10-18"
+        "nameChecked": "2026-10-18",
+        "aliases": [
+          "Orleans"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "Orleans"
+            ],
+            "type": "本機資料夾無重音拼法",
+            "source": "翻譯好的規則書/Orleans/Base_Rules_2023_CHT.pdf",
+            "checked": "2026-10-18"
+          }
+        ]
       }
     },
     "catalog:fe7210a04875121e99a3": {
@@ -89,6 +128,238 @@
         "nameZhType": "本機規則書譯名，非已查證出版譯名",
         "nameZhSource": "翻譯好的規則書/Excalibur/Excalibur_Rulebook_CHT.pdf#page=1",
         "nameChecked": "2026-10-18"
+      }
+    },
+    "catalog:0fb3ca0c9e2519c312f2": {
+      "reason": "加入可由本機規則檔案名稱核對的原文別名，非推測中文名",
+      "source": "翻譯好的規則書/Manhattan_Project/MP_Rulebook_EN_CHT.pdf",
+      "fields": {
+        "aliases": [
+          "Manhattan Project"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "Manhattan Project"
+            ],
+            "type": "本機資料夾與規則檔名縮寫",
+            "source": "翻譯好的規則書/Manhattan_Project/MP_Rulebook_EN_CHT.pdf",
+            "checked": "2026-10-18"
+          }
+        ]
+      }
+    },
+    "catalog:396a6f5800f41e9c7750": {
+      "reason": "加入可由本機規則檔案名稱核對的原文別名，非推測中文名",
+      "source": "翻譯好的規則書/Energy_Empire/Energy_Empire_English_Rulebook_small_CHT.pdf",
+      "fields": {
+        "aliases": [
+          "Energy Empire"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "Energy Empire"
+            ],
+            "type": "本機規則檔名短名",
+            "source": "翻譯好的規則書/Energy_Empire/Energy_Empire_English_Rulebook_small_CHT.pdf",
+            "checked": "2026-10-18"
+          }
+        ]
+      }
+    },
+    "catalog:9868e3714efb405e84f1": {
+      "reason": "加入可由本機規則檔案名稱核對的原文別名，非推測中文名",
+      "source": "翻譯好的規則書/Inventions/Inventions Rules v7_zho-CN_CHT.pdf",
+      "fields": {
+        "aliases": [
+          "Inventions"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "Inventions"
+            ],
+            "type": "本機規則檔名短名",
+            "source": "翻譯好的規則書/Inventions/Inventions Rules v7_zho-CN_CHT.pdf",
+            "checked": "2026-10-18"
+          }
+        ]
+      }
+    },
+    "catalog:bb8d3d8e6215686f43e4": {
+      "reason": "加入可由本機規則檔案名稱核對的原文別名，非推測中文名",
+      "source": "翻譯好的規則書/Trickerion/Trickerion-Retail-version-Revised-Rulebook_2019-web_CHT.pdf",
+      "fields": {
+        "aliases": [
+          "Trickerion"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "Trickerion"
+            ],
+            "type": "本機規則檔名短名",
+            "source": "翻譯好的規則書/Trickerion/Trickerion-Retail-version-Revised-Rulebook_2019-web_CHT.pdf",
+            "checked": "2026-10-18"
+          }
+        ]
+      }
+    },
+    "catalog:a160dbf1af5f55444832": {
+      "reason": "加入可由本機規則檔案名稱核對的原文別名，非推測中文名",
+      "source": "翻譯好的規則書/Avalon/AvalonRuleBook(Core)_v2_CHT.pdf",
+      "fields": {
+        "aliases": [
+          "Avalon"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "Avalon"
+            ],
+            "type": "本機基本規則檔名短名",
+            "source": "翻譯好的規則書/Avalon/AvalonRuleBook(Core)_v2_CHT.pdf",
+            "checked": "2026-10-18"
+          }
+        ]
+      }
+    },
+    "essen2026:a160dbf1af5f55444832": {
+      "reason": "加入可由本機規則檔案名稱核對的原文別名，非推測中文名",
+      "source": "翻譯好的規則書/Avalon/AvalonRuleBook(Core)_v2_CHT.pdf",
+      "fields": {
+        "aliases": [
+          "Avalon"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "Avalon"
+            ],
+            "type": "本機基本規則檔名短名",
+            "source": "翻譯好的規則書/Avalon/AvalonRuleBook(Core)_v2_CHT.pdf",
+            "checked": "2026-10-18"
+          }
+        ]
+      }
+    },
+    "catalog:3bab4a99a4ea9cadc59e": {
+      "reason": "加入可由本機規則檔案名稱核對的原文別名，非推測中文名",
+      "source": "翻譯好的規則書/Chicago_1875/CotBS_Rulebook_EN_V30_WEB_CHT.pdf",
+      "fields": {
+        "aliases": [
+          "Chicago 1875",
+          "CotBS"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "Chicago 1875",
+              "CotBS"
+            ],
+            "type": "本機資料夾短名與規則檔名縮寫",
+            "source": "翻譯好的規則書/Chicago_1875/CotBS_Rulebook_EN_V30_WEB_CHT.pdf",
+            "checked": "2026-10-18"
+          }
+        ]
+      }
+    },
+    "catalog:f9d658362afa906e88c0": {
+      "reason": "加入可由本機規則檔案名稱核對的原文別名，非推測中文名",
+      "source": "翻譯好的規則書/Rawr ’n Write/rawr_n_write_retail_rulebook-min_CHT.pdf",
+      "fields": {
+        "aliases": [
+          "Rawr ’n Write",
+          "Rawr n Write"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "Rawr ’n Write",
+              "Rawr n Write"
+            ],
+            "type": "本機資料夾短名與檔名標點正規化",
+            "source": "翻譯好的規則書/Rawr ’n Write/rawr_n_write_retail_rulebook-min_CHT.pdf",
+            "checked": "2026-10-18"
+          }
+        ]
+      }
+    },
+    "catalog:0ace414e3d53096d29d6": {
+      "reason": "加入可由本機規則檔案名稱核對的原文別名，非推測中文名",
+      "source": "翻譯好的規則書/Voynich/Voynich-Rulebook-EN_CHT.pdf",
+      "fields": {
+        "aliases": [
+          "Voynich"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "Voynich"
+            ],
+            "type": "本機規則檔名短名",
+            "source": "翻譯好的規則書/Voynich/Voynich-Rulebook-EN_CHT.pdf",
+            "checked": "2026-10-18"
+          }
+        ]
+      }
+    },
+    "essen2026:4a72e65870316b88b84d": {
+      "reason": "加入可由本機規則檔案名稱核對的原文別名，非推測中文名",
+      "source": "翻譯好的規則書/Voynich/Voynich-Rulebook-EN_CHT.pdf",
+      "fields": {
+        "aliases": [
+          "Voynich"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "Voynich"
+            ],
+            "type": "本機規則檔名短名",
+            "source": "翻譯好的規則書/Voynich/Voynich-Rulebook-EN_CHT.pdf",
+            "checked": "2026-10-18"
+          }
+        ]
+      }
+    },
+    "catalog:02ee6d36d3939d394a3a": {
+      "reason": "加入可由本機規則檔案名稱核對的原文別名，非推測中文名",
+      "source": "翻譯好的規則書/Moonsaga/MoonsagaRulesheet-Web_CHT.pdf",
+      "fields": {
+        "aliases": [
+          "Moonsaga"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "Moonsaga"
+            ],
+            "type": "本機規則檔名短名",
+            "source": "翻譯好的規則書/Moonsaga/MoonsagaRulesheet-Web_CHT.pdf",
+            "checked": "2026-10-18"
+          }
+        ]
+      }
+    },
+    "catalog:48e13f9d344329d65e97": {
+      "reason": "加入可由本機規則檔案名稱核對的原文別名，非推測中文名",
+      "source": "翻譯好的規則書/Brass_Birmingham/Brass-P-Rulebook-ENG_CHT.pdf",
+      "fields": {
+        "aliases": [
+          "Brass Birmingham"
+        ],
+        "aliasSources": [
+          {
+            "names": [
+              "Brass Birmingham"
+            ],
+            "type": "本機資料夾標點正規化",
+            "source": "翻譯好的規則書/Brass_Birmingham/Brass-P-Rulebook-ENG_CHT.pdf",
+            "checked": "2026-10-18"
+          }
+        ]
       }
     }
   },
