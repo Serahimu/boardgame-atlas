@@ -118,7 +118,7 @@ python3 scripts/build_publishers.py
 
 ## GitHub Pages 部署
 
-此專案可直接以根目錄的靜態檔案部署。若使用分支部署，在 GitHub 的 **Settings → Pages** 選擇 **Deploy from a branch → main → / (root)**；若已配置其他部署流程，需一併發布兩個 HTML、共用資源、完整 `data/` 與 `assets/` 目錄。
+此專案以 `dev` 分支的 `/docs` 發布網站。執行 `python3 scripts/publish_pages.py` 先完成建置與檢查，再把公開白名單輸出到 `docs/`；來源 Excel、品質報告與私人資料不加入網站發布包。若使用分支部署，在 GitHub 的 **Settings → Pages** 選擇 **Deploy from a branch → dev → /docs**；若已配置其他部署流程，需一併發布兩個 HTML、共用資源、完整 `data/` 與 `assets/` 目錄。
 
 推送至部署分支後，等待 GitHub Pages 部署完成，再檢查首頁與 `essen.html`。所有站內資源皆使用相對路徑，適用於 `https://<帳號>.github.io/boardgame-atlas/` 形式的專案網站。此儲存庫不包含額外的 Actions 工作流程。
 
@@ -165,3 +165,5 @@ python3 scripts/check_links.py --check --limit 20 --interval 1
 `401` 或導向登入頁記為需登入，`403` 記為存取受限，`404/410` 記為失效，`429/5xx` 與連線失敗記為暫時不可用，保留查核日期。這項工作不在一般建置中執行；補圖也只在明確指定 `--fetch-covers` 時執行。
 
 `python3 scripts/build.py --dist` 另外產生明確白名單的公開網站包，包含更新頁、遊戲／文件資料和圖片，排除來源 Excel、開發腳本、品質報告與本機私人檔案。此包會移除 Excel 下載入口。平常的根目錄輸出保留 Excel 下載，供 `dev` 根目錄的 GitHub Pages 部署使用。發布檢查會阻擋缺檔、JSON 錯誤、無效關聯、JavaScript 語法錯誤，以及未授權公開的翻譯 URL。
+
+Pages 發布前執行 `python3 scripts/publish_pages.py`，將網站來源與產出的 `docs/` 一併提交至 `dev`。`docs/_config.yml` 排除規劃與驗收文件。
