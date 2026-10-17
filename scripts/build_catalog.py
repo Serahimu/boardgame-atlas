@@ -12,6 +12,7 @@ def build(config):
     old = json.loads(path.read_text()) if path.exists() else []
     by_key = {(g['name'], g['kind'], g.get('version') or ''): g for g in old}
     covers = json.loads((ROOT / 'data/cover-manifest.json').read_text())
+    original_covers = json.loads((ROOT / 'data/catalog-cover-manifest.json').read_text())
     result = []
     for i,row in enumerate(game_rows(ROOT / config['source'])):
         game = {k: row.get(h) or None for k,h in zip(KEYS,HEADERS)}
@@ -21,6 +22,10 @@ def build(config):
         game['bggid'] = match[1] if match else None
         for key in ['image','imageSource']:
             if prior.get(key): game[key] = prior[key]
+        original = original_covers.get(json.dumps([game['name'],game['kind'],game.get('version') or ''],ensure_ascii=False))
+        if original:
+            game['image'] = original['image']
+            game['imageSource'] = original['sourceUrl']
         cover = covers.get(game['bggid']) or covers.get(game.get('url'))
         if cover and cover.get('status') == 'ok':
             game['image'] = cover['image']

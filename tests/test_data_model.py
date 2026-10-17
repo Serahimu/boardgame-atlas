@@ -41,6 +41,10 @@ class DataModelTests(unittest.TestCase):
         self.assertEqual(classify(404),'broken')
         self.assertEqual(classify(401),'login_required')
         self.assertEqual(classify(503),'temporarily_unavailable')
+    def test_original_images_survive_rebuild(self):
+        games=json.loads((ROOT/'data/catalog.json').read_text())
+        self.assertGreaterEqual(sum(bool(g.get('image')) for g in games),160)
+        self.assertTrue(next(g for g in games if g['name']=='A Feast for Odin')['image'])
     def test_published_details_and_relations_resolve(self):
         for name,count in [('catalog',170),('essen',3666)]:
             games=json.loads((ROOT/f'data/{name}.json').read_text());self.assertEqual(len(games),count)
