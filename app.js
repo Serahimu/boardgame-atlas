@@ -144,6 +144,11 @@ function render(){
 const routeFields=['search','players','time','weight','rating','relation','sort','search-field','year-filter','missing-values','catalog-scope','taxonomy-mode','excluded-tags','document-category','document-language'];
 function saveRoute(){const u=new URL(location.href);for(const key of routeFields){const value=$(key)?.value;if(value)u.searchParams.set(key,value);else u.searchParams.delete(key)}for(const [key] of taxonomy){if(selected[key].size)u.searchParams.set(key,JSON.stringify([...selected[key]]));else u.searchParams.delete(key)}u.searchParams.set('page',page);u.searchParams.set('size',PAGE_SIZE);u.searchParams.set('view',view);history.replaceState({...history.state,scroll:window.scrollY},'',u);}
 function restoreRoute(){const p=new URLSearchParams(location.search);for(const key of routeFields){if(!p.has(key)||!$(key))continue;const el=$(key),v=p.get(key);if(el.tagName!=='SELECT'||[...el.options].some(o=>o.value===v))el.value=v}for(const [key] of taxonomy){try{const values=JSON.parse(p.get(key)||'[]');if(Array.isArray(values))values.filter(v=>typeof v==='string').forEach(v=>selected[key].add(v))}catch{}}document.querySelectorAll('[data-taxonomy]').forEach(i=>i.checked=selected[i.dataset.taxonomy].has(i.value));updateSelection();page=Math.max(1,Number(p.get('page'))||1);PAGE_SIZE=[24,48,96].includes(Number(p.get('size')))?Number(p.get('size')):48;view=p.get('view')==='list'?'list':view;}
+let migrationsPromise;
+async function restoreGameRoute(game){
+ let stable=game;if(/^\d+$/.test(game)){try{migrationsPromise??=loadJSON('data/id-migrations.json').catch(e=>{migrationsPromise=null;throw e});stable=(await migrationsPromise).datasets[isEssen?'essen2026':'catalog']?.[game]||game;}catch{$('result').textContent='舊版遊戲網址對照載入失敗，請重新整理重試。';return}}
+ if(new URLSearchParams(location.search).get('game')!==game)return;const d=data.find(x=>x.stableId===stable||String(x.id)===stable);if(d)show(d.id,false,true);else $('result').textContent='此遊戲網址未在目前清單中找到，請使用搜尋查找。';
+}
 function applyRoute(){
  restoring=true;
  const oldDirectory=catalogMode==='publishers'&&!publisherKey;
@@ -173,7 +178,7 @@ function applyRoute(){
  for(const id of ['search','players','time','weight','rating','relation'])$(id).value='';
  initMultiselect();page=directory?directoryState.page:1;
  if(directory)$('search').value=directoryState.search;
- restoreRoute();render();if(($('document-category').value||$('document-language').value)&&!documentFacets)ensureDocumentFacets().then(render);restoring=false;const game=new URLSearchParams(location.search).get('game');if(game){const d=data.find(x=>x.stableId===game||String(x.id)===game);if(d)show(d.id,false,true)}
+ restoreRoute();render();if(($('document-category').value||$('document-language').value)&&!documentFacets)ensureDocumentFacets().then(render);restoring=false;const game=new URLSearchParams(location.search).get('game');if(game)restoreGameRoute(game)
 }
 window.addEventListener('hashchange',applyRoute);window.addEventListener('popstate',()=>{applyRoute();requestAnimationFrame(()=>window.scrollTo(0,history.state?.scroll||0))});
 document.addEventListener('click',event=>{
