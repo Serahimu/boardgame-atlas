@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+cd "$(git rev-parse --show-toplevel)"
+python3 scripts/validate_site.py
+python3 -m unittest discover -s tests -p 'test_*.py'
+node --test tests/*.test.cjs
