@@ -1,0 +1,28 @@
+{
+  "index.html": {
+    "title": "桌遊藏書室 · BGG Collection",
+    "collection": "translated",
+    "navigation": "<nav class=\"collections\" aria-label=\"桌遊清單\"><a href=\"index.html\" aria-current=\"page\">AI 翻譯規則書清單</a><a href=\"essen.html\">Essen 2026 Most Wanted</a></nav>",
+    "intro": "<section class=\"intro\"><div><div class=\"micro\">EXPLORE YOUR NEXT GAME</div><h1>每一場，都有新發現。</h1><p>從主遊戲出發，探索擴充、Promo 與每一個新版本。</p></div><div class=\"stats\" id=\"stats\"></div></section>",
+    "sourceNotes": "",
+    "relationOptions": "",
+    "snapshotDate": "2026.10.16",
+    "sourceSort": "",
+    "workbook": "BGG桌遊資料_完整.xlsx",
+    "styles": "<link rel=\"stylesheet\" href=\"styles.css?v=20261018-publishers\"><link rel=\"stylesheet\" href=\"personal.css\"><link rel=\"stylesheet\" href=\"enhancements.css\">",
+    "scripts": "<script src=\"catalog-core.js\" defer></script><script src=\"personal.js\" defer></script><script src=\"enhancements.js\" defer></script><script src=\"app.js?v=20261018-publishers\" defer></script>"
+  },
+  "essen.html": {
+    "title": "Essen 2026 Most Wanted · 桌遊藏書室",
+    "collection": "essen",
+    "navigation": "<nav class=\"collections\" aria-label=\"桌遊清單\"><a href=\"index.html\">AI 翻譯規則書清單</a><a href=\"essen.html\" aria-current=\"page\">Essen 2026 Most Wanted</a></nav>",
+    "intro": "<section class=\"intro\"><div><div class=\"micro\">SPIEL 2026 · MOST WANTED</div><h1>下一場，從 Essen 出發。</h1><p>探索 Most Wanted 清單、相關遊戲與規則文件，為展會做好準備。</p></div><div class=\"stats\" id=\"stats\"></div></section>",
+    "sourceNotes": "<details class=\"source-notes\"><summary>資料範圍與整理說明 · <a href=\"Essen2026_Most_Wanted_桌遊資料_完整.xlsx\" download>下載完整 Excel</a></summary><dl id=\"source-notes\" class=\"detailsgrid\"></dl></details>",
+    "relationOptions": "<option>佔位項目</option>",
+    "snapshotDate": "2026.10.17",
+    "sourceSort": "<option value=\"source\">原清單順序</option>",
+    "workbook": "Essen2026_Most_Wanted_桌遊資料_完整.xlsx",
+    "styles": "<link rel=\"stylesheet\" href=\"styles.css?v=20261018-publishers\"><link rel=\"stylesheet\" href=\"personal.css\"><link rel=\"stylesheet\" href=\"enhancements.css\">",
+    "scripts": "<script src=\"catalog-core.js\" defer></script><script src=\"personal.js\" defer></script><script src=\"enhancements.js\" defer></script><script src=\"app.js?v=20261018-publishers\" defer></script>"
+  }
+}

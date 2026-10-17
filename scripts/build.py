@@ -12,6 +12,6 @@ def main():
     args = parser.parse_args()
     if args.fetch_covers:
         subprocess.run([sys.executable, str(ROOT/'scripts/fetch_covers.py')], cwd=ROOT, check=True)
-    for script in ['build_catalog.py','build_essen.py','normalize_catalog.py','split_details.py']:
+    for script in ['build_catalog.py','build_essen.py','normalize_catalog.py','split_details.py','build_pages.py']:
         subprocess.run([sys.executable,str(ROOT/'scripts'/script)],cwd=ROOT,check=True)
 if __name__ == '__main__': main()
