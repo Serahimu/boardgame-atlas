@@ -24,7 +24,17 @@ window.AtlasPersonal = (() => {
  const features=[];
  function id(g){return g.stableId||g.uid||(typeof g.id==='string'?g.id:null)||'item:'+encodeURIComponent([g.bggid||g.url||'',g.name,g.kind,g.edition||'',g.version||''].join('|'))}
  function record(g){const key=id(g);return db.items[key]||{id:key,name:g.name,publisher:g.publisher||'',statuses:[],lists:[],plays:[]}}
- function save(g,patch){if(recoveryRaw)throw Error('請先下載原始資料復原檔，再還原有效 JSON 備份，以保留受損資料');const key=id(g), next={...record(g),...patch,updatedAt:new Date().toISOString()};const copy={...db,items:{...db.items,[key]:next}};validateBackup(copy);localStorage.setItem(KEY,JSON.stringify(copy));db=copy;document.dispatchEvent(new CustomEvent('atlas:personal-change',{detail:{id:key,record:next}}));return next}
+ function saveBatch(changes){
+  if(recoveryRaw)throw Error('請先下載原始資料復原檔，再還原有效 JSON 備份，以保留受損資料');
+  const items={...db.items},updatedAt=new Date().toISOString(),records=[];
+  for(const {game,patch} of changes){const key=id(game),next={...(items[key]||record(game)),...patch,updatedAt};items[key]=next;records.push({id:key,record:next})}
+  const copy={...db,items};validateBackup(copy);
+  // One storage write commits the complete selection, or leaves every record unchanged.
+  localStorage.setItem(KEY,JSON.stringify(copy));db=copy;
+  for(const detail of records)document.dispatchEvent(new CustomEvent('atlas:personal-change',{detail}));
+  return records.map(value=>value.record);
+ }
+ function save(game,patch){return saveBatch([{game,patch}])[0]}
  function appointmentUTC(local,zone){
   if(!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(local||''))throw Error('請填完整預約日期時間');
   const parts=local.match(/\d+/g).map(Number),base=Date.UTC(parts[0],parts[1]-1,parts[2],parts[3],parts[4]);
@@ -55,7 +65,7 @@ window.AtlasPersonal = (() => {
  dialog.addEventListener('click',async e=>{const a=e.target.closest('[data-personal-action]')?.dataset.personalAction;if(!a)return;try{if(a==='recovery'){download('atlas-damaged-recovery.json',recoveryRaw);return}if(a==='home'){render();return}if(a.startsWith('edit:')){const key=decodeURIComponent(a.slice(5));edit(games.find(g=>id(g)===key)||db.items[key]);return}for(const f of features)if(f.action)await f.action(a)}catch(error){message(error.message)}});
  }
  features.push({title:'收藏狀態',form:r=>['已擁有','想玩','想買','已玩','已出售'].map(v=>`<label><input type="checkbox" name="statuses" value="${v}" ${(r.statuses||[]).includes(v)?'checked':''}>${v}</label>`).join('')+'<p>想玩、想買、已玩可並存；已擁有與已出售互斥。</p>',read:fd=>{const statuses=fd.getAll('statuses');if(statuses.includes('已擁有')&&statuses.includes('已出售'))throw Error('已擁有與已出售不能同時選取');return {statuses}}});
- return {init,attach,open,id,record,save,features,esc,input,select,button,download,appointmentUTC,validateBackup,clearRecovery(){recoveryRaw='';storageWarning=''},get storageWarning(){return storageWarning},get activeId(){return active?id(active):null},get state(){return db},get games(){return games},persist,message,render,get dialog(){return dialog}};
+ return {init,attach,open,id,record,save,saveBatch,features,esc,input,select,button,download,appointmentUTC,validateBackup,clearRecovery(){recoveryRaw='';storageWarning=''},get storageWarning(){return storageWarning},get activeId(){return active?id(active):null},get state(){return db},get games(){return games},persist,message,render,get dialog(){return dialog}};
 })();
 document.addEventListener('atlas:ready',e=>AtlasPersonal.init(e.detail.data));
 document.addEventListener('atlas:detail',e=>AtlasPersonal.attach(e.detail.game));
@@ -69,7 +79,7 @@ if(window.Atlas?.data)AtlasPersonal.init(window.Atlas.data);
 
 {const A=window.AtlasPersonal;A.features.push({title:'購買優先級',form:r=>A.select('priority','購買優先',['','必買','考慮中','試玩後決定'],r.priority),read:fd=>({priority:fd.get('priority')})});}
 
-{const A=window.AtlasPersonal;A.features.push({title:'批次操作',toolbar:()=>A.button('batch','批次加入清單 / 狀態'),action:a=>{if(a!=='batch')return;const ids=[...A.dialog.querySelectorAll('[data-personal-select]:checked')].map(el=>el.value);if(!ids.length)throw Error('請先勾選要操作的項目');const list=prompt(`已選 ${ids.length} 項，加入哪個清單？（留空不變更）`);if(list===null)return;const status=prompt('加入狀態：已擁有、想玩、想買、已玩、已出售（留空不變更）','');if(status===null)return;if(status&&!['已擁有','想玩','想買','已玩','已出售'].includes(status))throw Error('狀態無效');for(const key of ids){const r=A.state.items[key],g=A.games.find(g=>A.id(g)===key)||r;let statuses=[...(r.statuses||[])];if(status){statuses=statuses.filter(s=>!(status==='已擁有'&&s==='已出售')&&!(status==='已出售'&&s==='已擁有'));statuses=[...new Set([...statuses,status])]}A.save(g,{statuses,lists:list?[...new Set([...(r.lists||[]),list])]:r.lists})}A.render();A.message(`已更新 ${ids.length} 項`)}});}
+{const A=window.AtlasPersonal;A.features.push({title:'批次操作',toolbar:()=>A.button('batch','批次加入清單 / 狀態'),action:a=>{if(a!=='batch')return;const ids=[...A.dialog.querySelectorAll('[data-personal-select]:checked')].map(el=>el.value);if(!ids.length)throw Error('請先勾選要操作的項目');const list=prompt(`已選 ${ids.length} 項，加入哪個清單？（留空不變更）`);if(list===null)return;const status=prompt('加入狀態：已擁有、想玩、想買、已玩、已出售（留空不變更）','');if(status===null)return;if(status&&!['已擁有','想玩','想買','已玩','已出售'].includes(status))throw Error('狀態無效');const changes=[];for(const key of ids){const r=A.state.items[key],g=A.games.find(g=>A.id(g)===key)||r;let statuses=[...(r.statuses||[])];if(status){statuses=statuses.filter(s=>!(status==='已擁有'&&s==='已出售')&&!(status==='已出售'&&s==='已擁有'));statuses=[...new Set([...statuses,status])]}changes.push({game:g,patch:{statuses,lists:list?[...new Set([...(r.lists||[]),list])]:r.lists}})}A.saveBatch(changes);A.render();A.message(`已更新 ${ids.length} 項`)}});}
 
 {const A=window.AtlasPersonal;A.features.push({title:'收藏統計',form:r=>`<label><input type="checkbox" name="sealed" ${r.sealed?'checked':''}>尚未開封</label>`,read:fd=>({sealed:fd.has('sealed')}),summary:rows=>{const owned=rows.filter(r=>(r.statuses||[]).includes('已擁有')),gs=owned.map(r=>A.games.find(g=>A.id(g)===r.id)).filter(Boolean),count=field=>Object.entries(gs.reduce((o,g)=>{const v=String(g[field]||'未提供');o[v]=(o[v]||0)+1;return o},{})).map(([k,v])=>`${A.esc(k)}: ${v}`).join(' · ');return `<section><h3>收藏統計</h3><p>已擁有 ${owned.length} · 未開封 ${owned.filter(r=>r.sealed).length}</p><details><summary>重度 / 人數 / 機制覆蓋</summary><p>重度：${count('weight')}</p><p>玩家：${count('players')}</p><p>機制：${count('mechanism')}</p></details></section>`}});}
 
