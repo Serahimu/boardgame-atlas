@@ -108,3 +108,15 @@ def apply_overrides(games, overrides):
         by_id[key].update(fields)
         by_id[key]['editorialOverride'] = {'reason':entry['reason'],'source':entry['source']}
     return games
+
+def add_filter_terms(games):
+    for game in games:
+        game['filterTerms'] = {}
+        for field in ['typeZh','categoryZh','mechanismZh']:
+            raw = str(game.get(field) or '')
+            terms = [] if 'BGG 未' in raw else [s.strip() for s in re.split(r'[、；;]', raw) if s.strip() and '另有' not in s and '摘要未展開' not in s]
+            if field == 'categoryZh' and str(game.get('category') or '').startswith('2022 Golden Geek'):
+                terms = []
+                game.setdefault('dataWarnings', []).append('Award nominations are not game categories')
+            game['filterTerms'][field] = sorted(set(terms))
+    return games
