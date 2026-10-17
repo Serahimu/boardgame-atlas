@@ -17,6 +17,24 @@ class DataModelTests(unittest.TestCase):
         games.reverse();add_identity(games,'test')
         self.assertEqual(before,{g['id']:g['stableId'] for g in games})
         self.assertEqual(len(set(before.values())),2)
+    def test_persistent_identity_survives_source_rename(self):
+        registry={'schemaVersion':1,'datasets':{}}
+        original={'id':0,'bggid':'123','url':'https://boardgamegeek.com/boardgame/123/old-slug','name':'Old name','kind':'主遊戲','version':'https://boardgamegeek.com/boardgameversion/456/old-slug','stableId':'catalog:already-issued','entityId':'game:already-issued'}
+        add_identity([original],'catalog',registry)
+        renamed={'id':19,'bggid':None,'url':'http://www.boardgamegeek.com/boardgame/123/new-slug?utm_source=x','name':'New name','kind':'主遊戲','version':'https://boardgamegeek.com/boardgameversion/456/new-slug'}
+        add_identity([renamed],'catalog',registry)
+        self.assertEqual(renamed['stableId'],'catalog:already-issued')
+        self.assertEqual(renamed['entityId'],'game:already-issued')
+    def test_source_collision_names_remain_distinct(self):
+        registry={'schemaVersion':1,'datasets':{}}
+        games=[{'id':i,'name':name,'kind':'擴充','url':'https://example.org/project/1'} for i,name in enumerate(['A','B','C'])]
+        add_identity(games,'catalog',registry)
+        self.assertEqual(len({g['stableId'] for g in games}),3)
+        before={g['name']:g['stableId'] for g in games}
+        games.reverse();add_identity(games,'catalog',registry)
+        self.assertEqual(before,{g['name']:g['stableId'] for g in games})
+        changed=copy.deepcopy(games);changed[0]['name']='Unverified renamed expansion'
+        with self.assertRaises(ValueError):add_identity(changed,'catalog',registry)
     def test_many_to_many_and_nested_relations(self):
         games=[{'id':0,'name':'A','parentIds':[]},{'id':1,'name':'B','parentIds':[]},{'id':2,'name':'C','parentIds':[0,1]},{'id':3,'name':'D','parentIds':[2]}]
         for g in games:g['stableId']=str(g['id'])

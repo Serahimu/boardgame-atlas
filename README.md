@@ -167,3 +167,5 @@ python3 scripts/check_links.py --check --limit 20 --interval 1
 `python3 scripts/build.py --dist` 另外產生明確白名單的公開網站包，包含更新頁、遊戲／文件資料和圖片，排除來源 Excel、開發腳本、品質報告與本機私人檔案。此包會移除 Excel 下載入口。平常的根目錄輸出保留 Excel 下載，供 `dev` 根目錄的 GitHub Pages 部署使用。發布檢查會阻擋缺檔、JSON 錯誤、無效關聯、JavaScript 語法錯誤，以及未授權公開的翻譯 URL。
 
 Pages 發布前執行 `python3 scripts/publish_pages.py`，將網站來源與產出的 `docs/` 一併提交至 `dev`。`docs/_config.yml` 排除規劃與驗收文件。
+
+穩定 ID 由 `data/identity-registry.json` 持續保存，來源 BGG ID（缺值時使用正規化 URL）、項目類型與版次 URL 為優先識別鍵；遊戲名稱更正、BGG 網址 slug 或追蹤參數變動不改變已發佈的 ID。只有同來源／類型／版次存在多個項目時才以名稱消歧；這類項目更名時，建置會要求在 registry 的 `names` 加入已查證的新別名，避免錯接收藏。請提交並保留 registry，不要每次重建刪除它。歷史數字 ID 遷移也會保留最早對應，新增項目請使用穩定 ID 分享網址。
