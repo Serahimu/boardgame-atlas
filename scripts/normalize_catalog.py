@@ -7,7 +7,11 @@ def main():
     migrations = {}
     for dataset, file in [('catalog', 'catalog.json'), ('essen2026', 'essen.json')]:
         path = ROOT / 'data' / file
-        games = add_relations(add_identity(json.loads(path.read_text()), dataset))
+        raw = json.loads(path.read_text())
+        for game in raw:
+            if game.get('detailPath'):
+                game.update(json.loads((ROOT / game['detailPath']).read_text()).get(game['stableId'], {}))
+        games = add_relations(add_identity(raw, dataset))
         games = apply_overrides(games, json.loads((ROOT / 'data/overrides.json').read_text()))
         games = add_filter_terms(games)
         games = add_provenance(add_release(add_metrics(add_structure(games))), dataset)
