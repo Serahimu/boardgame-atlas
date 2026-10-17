@@ -7,13 +7,13 @@ from workbook import game_rows, HEADERS
 ROOT = Path(__file__).resolve().parents[1]
 KEYS = ['name','url','year','rating','players','type','category','mechanism','time','weight','gallery','designer','artist','publisher','funding','release','edition','version','kind','parent','typeZh','categoryZh','mechanismZh']
 
-def main():
-    path = ROOT / 'data/catalog.json'
-    old = json.loads(path.read_text())
+def build(config):
+    path = ROOT / config['listPath']
+    old = json.loads(path.read_text()) if path.exists() else []
     by_key = {(g['name'], g['kind'], g.get('version') or ''): g for g in old}
     covers = json.loads((ROOT / 'data/cover-manifest.json').read_text())
     result = []
-    for i,row in enumerate(game_rows(ROOT / 'BGG桌遊資料_完整.xlsx')):
+    for i,row in enumerate(game_rows(ROOT / config['source'])):
         game = {k: row.get(h) or None for k,h in zip(KEYS,HEADERS)}
         prior = by_key.get((game['name'],game['kind'],game.get('version') or ''), {})
         game['id'] = i
@@ -28,4 +28,8 @@ def main():
         result.append(game)
     path.write_text(json.dumps(result,ensure_ascii=False,separators=(',',':'))+'\n')
     print(f'Exported {len(result)} original catalogue items')
+def main():
+    from dataset_config import configured_datasets
+    for config in configured_datasets():
+        if config['parser']=='catalog':build(config)
 if __name__ == '__main__': main()

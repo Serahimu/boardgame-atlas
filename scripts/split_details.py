@@ -2,11 +2,13 @@
 """Emit list payloads and lazily loaded detail shards keyed by stableId."""
 import json
 from pathlib import Path
+from dataset_config import configured_datasets
 ROOT = Path(__file__).resolve().parents[1]
 DETAIL_FIELDS = {'originals','source','officialSearch','checked','notes','gallery','version','funding','edition','documentSummary','documentStatus','priorityDocument','parentBggid','people','tags','provenance','missingValues','dataWarnings','editorialOverride'}
 def main():
-    for dataset, filename in [('catalog','catalog.json'),('essen2026','essen.json')]:
-        path=ROOT/'data'/filename
+    for config in configured_datasets():
+        dataset=config['id']
+        path=ROOT/config['listPath']
         games=json.loads(path.read_text()); shards=[{} for _ in range(32)]
         for game in games:
             index=int(game['stableId'][-2:],16)%32

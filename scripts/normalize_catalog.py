@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 import json
 from pathlib import Path
+from dataset_config import configured_datasets
 from catalog_model import add_identity, add_relations, add_structure, add_metrics, add_release, add_provenance, apply_overrides, add_filter_terms
 ROOT = Path(__file__).resolve().parents[1]
 def main():
     migrations = {}
-    for dataset, file in [('catalog', 'catalog.json'), ('essen2026', 'essen.json')]:
-        path = ROOT / 'data' / file
+    for config in configured_datasets():
+        dataset = config['id']
+        path = ROOT / config['listPath']
         raw = json.loads(path.read_text())
         for game in raw:
             if game.get('detailPath'):

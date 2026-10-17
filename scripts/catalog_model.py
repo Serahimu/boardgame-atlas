@@ -91,7 +91,9 @@ def add_release(games):
 
 def add_provenance(games, dataset):
     for game in games:
-        checked = str(game.get('checked') or '')[:10] or ('2026-10-16' if dataset == 'catalog' else None)
+        from dataset_config import configured_datasets
+        config = next(c for c in configured_datasets() if c['id']==dataset)
+        checked = str(game.get('checked') or '')[:10] or config.get('snapshotDate')
         game['provenance'] = {'dataset': dataset, 'checkedAt': checked, 'updatedAt': None, 'sourceUrl': game.get('url'), 'dateBasis': 'item' if game.get('checked') else 'workbook_snapshot' if checked else 'unknown'}
         game['releaseInfo']['checkedAt'] = checked
     return games

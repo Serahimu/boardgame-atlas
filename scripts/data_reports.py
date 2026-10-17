@@ -3,13 +3,14 @@
 import argparse
 import json
 from pathlib import Path
+from dataset_config import configured_datasets
 ROOT=Path(__file__).resolve().parents[1]
 def write(name,value):
     target=ROOT/'data/reports'/name;target.parent.mkdir(parents=True,exist_ok=True)
     target.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
 def datasets():
-    for name in ['catalog','essen']:
-        yield name,json.loads((ROOT/f'data/{name}.json').read_text())
+    for config in configured_datasets():
+        yield Path(config['listPath']).stem,json.loads((ROOT/config['listPath']).read_text())
 def quality():
     report={'schemaVersion':1,'datasets':{}}
     for name,games in datasets():
