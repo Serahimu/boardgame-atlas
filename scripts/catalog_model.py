@@ -119,6 +119,7 @@ def add_filter_terms(games):
             terms = [] if 'BGG 未' in raw else [s.strip() for s in re.split(r'[、；;]', raw) if s.strip() and '另有' not in s and '摘要未展開' not in s]
             if field == 'categoryZh' and str(game.get('category') or '').startswith('2022 Golden Geek'):
                 terms = []
-                game.setdefault('dataWarnings', []).append('Award nominations are not game categories')
+                warning = 'Award nominations are not game categories'
+                if warning not in game.setdefault('dataWarnings', []):game['dataWarnings'].append(warning)
             game['filterTerms'][field] = sorted(set(terms))
     return games

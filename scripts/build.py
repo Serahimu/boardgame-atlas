@@ -13,7 +13,7 @@ def main():
     args = parser.parse_args()
     if args.fetch_covers:
         subprocess.run([sys.executable, str(ROOT/'scripts/fetch_covers.py')], cwd=ROOT, check=True)
-    for script in ['build_catalog.py','build_essen.py','normalize_catalog.py','split_details.py','build_pages.py','validate_site.py']:
+    for script in ['build_catalog.py','build_essen.py','normalize_catalog.py','split_details.py','build_document_facets.py','build_pages.py','validate_site.py']:
         subprocess.run([sys.executable,str(ROOT/'scripts'/script)],cwd=ROOT,check=True)
     if args.dist:
         subprocess.run([sys.executable,str(ROOT/'scripts/export_dist.py')],cwd=ROOT,check=True)
