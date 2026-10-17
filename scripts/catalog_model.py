@@ -61,3 +61,22 @@ def add_structure(games):
             translated = split_values(game.get(field + 'Zh'))
             game['tags'][field] = [{'id': field + ':' + hashlib.sha256(normalized(n).encode()).hexdigest()[:16], 'name': n, 'nameZh': translated[i] if len(translated) == len(originals) else None} for i, n in enumerate(originals)]
     return games
+
+def number(value):
+    try:
+        result = float(value)
+        return result if result == result and abs(result) != float('inf') else None
+    except (ValueError, TypeError):
+        return None
+
+def value_range(value):
+    text = unicodedata.normalize('NFKC', str(value or '')).strip()
+    match = re.fullmatch(r'(\d+)(?:\s*[–—−-]\s*(\d+))?(?:\s*(?:Min|min|分鐘))?\+?', text)
+    return {'min': int(match[1]), 'max': int(match[2] or match[1]), 'openEnded': text.endswith('+')} if match else None
+
+def add_metrics(games):
+    for game in games:
+        metrics = {'players': value_range(game.get('players')), 'minutes': value_range(game.get('time')), 'rating': number(game.get('rating')), 'weight': number(game.get('weight')), 'year': number(game.get('year'))}
+        game['metrics'] = metrics
+        game['missingValues'] = {k: str(game.get({'minutes': 'time'}.get(k, k)) or 'source_not_provided') for k, v in metrics.items() if v is None}
+    return games
