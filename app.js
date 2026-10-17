@@ -104,10 +104,10 @@ const activeFilters=document.createElement('div');activeFilters.id='active-filte
 function renderChips(){
  filterButton.textContent='篩選條件'+(taxonomy.reduce((n,[key])=>n+selected[key].size,0)?` · ${taxonomy.reduce((n,[key])=>n+selected[key].size,0)}`:'');
  const ids=['search','players','time','weight','rating','relation','search-field','year-filter','missing-values','catalog-scope','document-category','document-language','personal-state','exclude-personal','excluded-tags','taxonomy-mode'];
- activeFilters.innerHTML=ids.filter(id=>$(id)?.value&&!['all','main','exclude'].includes($(id).value)).map(id=>`<button data-remove-filter="${id}">${esc($(id).selectedOptions?.[0]?.textContent||$(id).value)} ×</button>`).join('')+taxonomy.flatMap(([key])=>[...selected[key]].map(term=>`<button data-remove-tax="${key}" data-term="${esc(term)}">${esc(term)} ×</button>`)).join('');
+ activeFilters.innerHTML=ids.filter(id=>$(id)?.value&&!['all','main','exclude','any'].includes($(id).value)).map(id=>`<button data-remove-filter="${id}">${esc($(id).selectedOptions?.[0]?.textContent||$(id).value)} ×</button>`).join('')+taxonomy.flatMap(([key])=>[...selected[key]].map(term=>`<button data-remove-tax="${key}" data-term="${esc(term)}">${esc(term)} ×</button>`)).join('');
  if(activeFilters.children.length)activeFilters.insertAdjacentHTML('beforeend','<button data-reset>清除全部</button>');
 }
-activeFilters.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.removeFilter){$(b.dataset.removeFilter).value=b.dataset.removeFilter==='search-field'?'all':b.dataset.removeFilter==='catalog-scope'?'main':b.dataset.removeFilter==='missing-values'?'exclude':'';}if(b.dataset.removeTax){selected[b.dataset.removeTax].delete(b.dataset.term);document.querySelectorAll('[data-taxonomy]').forEach(i=>i.checked=selected[i.dataset.taxonomy].has(i.value));updateSelection()}page=1;render()};
+activeFilters.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.removeFilter){$(b.dataset.removeFilter).value=b.dataset.removeFilter==='search-field'?'all':b.dataset.removeFilter==='taxonomy-mode'?'any':b.dataset.removeFilter==='catalog-scope'?'main':b.dataset.removeFilter==='missing-values'?'exclude':'';}if(b.dataset.removeTax){selected[b.dataset.removeTax].delete(b.dataset.term);document.querySelectorAll('[data-taxonomy]').forEach(i=>i.checked=selected[i.dataset.taxonomy].has(i.value));updateSelection()}page=1;render()};
 function render(){
  renderChips();
  $('page-size').value=PAGE_SIZE;
