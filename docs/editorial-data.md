@@ -14,3 +14,11 @@ BA-058 AI 規則問答依規劃 10.4 留在遠期，沒有外部服務、文件�
 翻譯檔檢查目前驗證登錄格式與完成狀態，不會將沒有清冊的項目誤判為缺檔。失效 URL 必須透過獨立連結查核工具檢查；瀏覽器不能可靠地跨站驗證所有 PDF。私人本機檔不掃描、不上傳。
 
 驗收：`node --test tests/enhancements.test.cjs`，涵蓋 HTML escaping、安全連結、缺值、穩定 ID、沒有來源時保持空白，以及去重不混淆語言／版次。
+
+## 私人本機檔對應檢查
+
+執行 `python3 scripts/audit_translations.py`，遞迴掃描專案上兩層的輸入與翻譯資料夾。可用 `--input`、`--translated` 指定目錄；報告只能輸出至 Git 忽略的 `.private/`。以原檔名對應 `_CHT.pdf`，不做模糊名稱猜測；列出缺檔、多個候選與新增未對應譯文。不讀取或上傳 PDF 內容。
+
+預設不改公開資料。人工核對遊戲與版次後，於 `.private/confirmed-map.json` 建立 `[{"confirmed":true,"sourceName":"原檔名.pdf","stableId":"已核對ID","scope":"主遊戲","edition":"已查證版次"}]`，再以 `--confirmed-map .private/confirmed-map.json` 更新公開狀態。只存無私人路徑的狀態；檔案存在不代表翻譯已校對，因此預設待校對。
+
+測試：`python3 -m unittest discover -s tests -p 'test_translation_audit.py'`。
