@@ -1,1 +1,96 @@
-{"schemaVersion":1,"items":{},"notice":"以 stableId 為鍵；每筆須有 reason、source 與 fields。身份欄位不能覆寫；別名與中文名須有查證來源。"}
+{
+  "schemaVersion": 1,
+  "items": {
+    "catalog:48cdcc9fcafa75fa2550": {
+      "reason": "已核對來源明示的中英文名稱；保留原文名稱不改身份或版次",
+      "source": "https://zh.boardgamearena.com/gamepanel?game=feastforodin",
+      "fields": {
+        "nameZh": "奧丁的盛宴",
+        "nameZhType": "BGA繁中平台顯示名",
+        "nameZhSource": "https://zh.boardgamearena.com/gamepanel?game=feastforodin",
+        "nameChecked": "2026-10-18"
+      }
+    },
+    "catalog:170df7a48b2e05c77763": {
+      "reason": "已核對來源明示的中英文名稱；保留原文名稱不改身份或版次",
+      "source": "https://zh.boardgamearena.com/gamepanel?game=arnak",
+      "fields": {
+        "nameZh": "阿納克遺跡",
+        "nameZhType": "BGA繁中平台顯示名",
+        "nameZhSource": "https://zh.boardgamearena.com/gamepanel?game=arnak",
+        "nameChecked": "2026-10-18"
+      }
+    },
+    "essen2026:170df7a48b2e05c77763": {
+      "reason": "已核對來源明示的中英文名稱；保留原文名稱不改身份或版次",
+      "source": "https://zh.boardgamearena.com/gamepanel?game=arnak",
+      "fields": {
+        "nameZh": "阿納克遺跡",
+        "nameZhType": "BGA繁中平台顯示名",
+        "nameZhSource": "https://zh.boardgamearena.com/gamepanel?game=arnak",
+        "nameChecked": "2026-10-18"
+      }
+    },
+    "catalog:add5ba74f2286d48ad5e": {
+      "reason": "已核對來源明示的中英文名稱；保留原文名稱不改身份或版次",
+      "source": "https://zh.boardgamearena.com/gamepanel?game=spacebase",
+      "fields": {
+        "nameZh": "太空基地",
+        "nameZhType": "BGA繁中平台顯示名",
+        "nameZhSource": "https://zh.boardgamearena.com/gamepanel?game=spacebase",
+        "nameChecked": "2026-10-18"
+      }
+    },
+    "catalog:b43f7499f2fade7e92ca": {
+      "reason": "已核對來源明示的中英文名稱；保留原文名稱不改身份或版次",
+      "source": "https://zh.boardgamearena.com/gamepanel?game=tapestry",
+      "fields": {
+        "nameZh": "文明繪卷",
+        "nameZhType": "BGA繁中平台顯示名",
+        "nameZhSource": "https://zh.boardgamearena.com/gamepanel?game=tapestry",
+        "nameChecked": "2026-10-18"
+      }
+    },
+    "catalog:9bcb809e8cd5f6bfe7eb": {
+      "reason": "已核對來源明示的中英文名稱；保留原文名稱不改身份或版次",
+      "source": "https://www.swanpanasia.com/products/orleans",
+      "fields": {
+        "nameZh": "奧爾良",
+        "nameZhType": "繁中出版商商品名",
+        "nameZhSource": "https://www.swanpanasia.com/products/orleans",
+        "nameChecked": "2026-10-18"
+      }
+    },
+    "essen2026:9bcb809e8cd5f6bfe7eb": {
+      "reason": "已核對來源明示的中英文名稱；保留原文名稱不改身份或版次",
+      "source": "https://www.swanpanasia.com/products/orleans",
+      "fields": {
+        "nameZh": "奧爾良",
+        "nameZhType": "繁中出版商商品名",
+        "nameZhSource": "https://www.swanpanasia.com/products/orleans",
+        "nameChecked": "2026-10-18"
+      }
+    },
+    "catalog:fe7210a04875121e99a3": {
+      "reason": "已核對來源明示的中英文名稱；保留原文名稱不改身份或版次",
+      "source": "翻譯好的規則書/Excalibur/Excalibur_Rulebook_CHT.pdf#page=1",
+      "fields": {
+        "nameZh": "王者之劍",
+        "nameZhType": "本機規則書譯名，非已查證出版譯名",
+        "nameZhSource": "翻譯好的規則書/Excalibur/Excalibur_Rulebook_CHT.pdf#page=1",
+        "nameChecked": "2026-10-18"
+      }
+    },
+    "essen2026:f8567f91ab148c55e137": {
+      "reason": "已核對來源明示的中英文名稱；保留原文名稱不改身份或版次",
+      "source": "翻譯好的規則書/Excalibur/Excalibur_Rulebook_CHT.pdf#page=1",
+      "fields": {
+        "nameZh": "王者之劍",
+        "nameZhType": "本機規則書譯名，非已查證出版譯名",
+        "nameZhSource": "翻譯好的規則書/Excalibur/Excalibur_Rulebook_CHT.pdf#page=1",
+        "nameChecked": "2026-10-18"
+      }
+    }
+  },
+  "notice": "以 stableId 為鍵；每筆須有 reason、source 與 fields。身份欄位不能覆寫；別名與中文名須有查證來源。"
+}
