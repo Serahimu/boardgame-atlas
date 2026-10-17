@@ -137,3 +137,31 @@ git diff --check
 ## 資料與權利
 
 桌遊資料與文件入口依工作簿所列 BGG／官方來源呈現。遊戲封面與規則文件的權利屬於各權利人。外部文件入口不代表網站提供直接下載或翻譯檔案；部分來源需要登入，連結、語言標示、評分、發行資訊也可能隨時間變更。來源語言與檔名辨識語言會分別保留，以便核對原檔。
+
+## 統一資料建置與檢查
+
+Python 3 標準函式庫即可離線重建兩份清單；發布前 JavaScript 語法檢查另需要 Node.js：
+
+```bash
+python3 scripts/build.py
+python3 -m unittest discover -s tests -p 'test_data_model.py'
+python3 scripts/data_reports.py quality
+python3 scripts/data_reports.py diff --baseline HEAD
+python3 scripts/audit_resources.py
+```
+
+`data/datasets.json` 定義來源、資料集識別碼、年份及來源快照日期。原清單從 Excel 依工作表與欄名讀取；`data/catalog-cover-manifest.json` 保存外置封面對應。人物、標籤、數值與發行日期有結構化欄位，來源字串仍保留。資料列重排不改變 `stableId`；`data/id-migrations.json` 保留原數字 ID 遷移，`entityId` 用於跨清單比對相同項目及版次。
+
+`templates/site.html` 與 `templates/pages.json` 共用兩頁結構與內容設定。重建保留現有頁面的 CSS／JavaScript 接線；修改頁面共同結構請編輯模板。清單載入 `data/catalog.json` 或 `data/essen.json`，詳情依每筆 `detailPath` 按需取得，以 `stableId` 為分片記錄鍵；文件沿用獨立分片。
+
+人工修正放在 `data/overrides.json`，每筆須提供 `reason`、`source` 與 `fields`。以穩定 ID 為鍵可新增 `nameZh`、`aliases`、出版社或封面修正；不得覆寫身份及關聯欄位。來源更新後會重新套用。
+
+報告位於 `data/reports/`。品質與資源盤點只報告問題，不刪除檔案；來源缺值不會補成猜測資料。連結查核預設只盤點並標示未查核，使用下列指令才會連線，並限制數量及每次間隔：
+
+```bash
+python3 scripts/check_links.py --check --limit 20 --interval 1
+```
+
+`401` 或導向登入頁記為需登入，`403` 記為存取受限，`404/410` 記為失效，`429/5xx` 與連線失敗記為暫時不可用，保留查核日期。這項工作不在一般建置中執行；補圖也只在明確指定 `--fetch-covers` 時執行。
+
+`python3 scripts/build.py --dist` 另外產生明確白名單的公開網站包，包含更新頁、遊戲／文件資料和圖片，排除來源 Excel、開發腳本、品質報告與本機私人檔案。此包會移除 Excel 下載入口。平常的根目錄輸出保留 Excel 下載，供 `dev` 根目錄的 GitHub Pages 部署使用。發布檢查會阻擋缺檔、JSON 錯誤、無效關聯、JavaScript 語法錯誤，以及未授權公開的翻譯 URL。
