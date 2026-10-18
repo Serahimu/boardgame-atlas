@@ -14,6 +14,9 @@ def main():
     publishers=json.loads((ROOT/'data/publishers.json').read_text())
     for publisher in publishers.get('publishers',[]):
         if publisher.get('image'):references.add(publisher['image'])
+    designers=json.loads((ROOT/'data/designers.json').read_text())
+    for designer in designers.get('designers',{}).values():
+        if designer.get('image'):references.add(designer['image'])
     for path in [ROOT/'index.html',ROOT/'essen.html',ROOT/'styles.css']:
         references.update(re.findall(r'assets/[^\s"\'<>\)]+',path.read_text()))
     images={p.relative_to(ROOT).as_posix() for p in (ROOT/'assets').rglob('*') if p.is_file()}

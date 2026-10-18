@@ -4,7 +4,7 @@ import re
 import shutil
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-PUBLIC_FILES=['index.html','essen.html','updates.html','styles.css','personal.css','enhancements.css','app.js','catalog-core.js','personal.js','enhancements.js','updates.js','data/catalog.json','data/essen.json','data/essen-notes.json','data/publishers.json','data/editorial.json','data/datasets.json','data/id-migrations.json','data/document-facets.json']
+PUBLIC_FILES=['index.html','essen.html','updates.html','styles.css','personal.css','enhancements.css','app.js','catalog-core.js','personal.js','enhancements.js','updates.js','data/catalog.json','data/essen.json','data/essen-notes.json','data/publishers.json','data/designers.json','data/editorial.json','data/datasets.json','data/id-migrations.json','data/document-facets.json']
 PUBLIC_DIRECTORIES=['assets','data/details','data/essen-documents']
 def main():
     from validate_site import main as validate

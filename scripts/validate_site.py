@@ -34,13 +34,27 @@ def validate_editorial(editorial):
             if any(translation.get(field) for field in ['localPath','privateUrl','privatePath']):
                 raise ValueError('Private translation location included in public data: '+key)
 
+def validate_designers(manifest):
+    for key,person in manifest.get('designers',manifest).items():
+        image=person.get('image')
+        if not image:continue
+        path=local_reference(image)
+        if not path or '..' in Path(path).parts or not re.fullmatch(r'assets/designers/\d+\.webp',path):
+            raise ValueError('Unsafe designer photo path: '+key)
+        if person.get('status')!='ok' or str(person.get('bggId'))!=Path(path).stem:
+            raise ValueError('Designer photo identity mismatch: '+key)
+        if str(person.get('imageid')) in {'1657689','1657690'}:
+            raise ValueError('Generic placeholder is not a designer photo: '+key)
+        if not (ROOT/path).is_file():raise ValueError('Missing designer photo: '+path)
+
 def main():
-    for required in ['index.html','essen.html','app.js','styles.css','catalog-core.js','personal.js','enhancements.js','data/editorial.json','data/datasets.json']:
+    for required in ['index.html','essen.html','app.js','styles.css','catalog-core.js','personal.js','enhancements.js','data/editorial.json','data/datasets.json','data/designers.json']:
         if not (ROOT/required).is_file():raise ValueError('Missing required file: '+required)
     count=0
     for path in (ROOT/'data').rglob('*.json'):
         json.loads(path.read_text());count+=1
     validate_editorial(json.loads((ROOT/'data/editorial.json').read_text()))
+    validate_designers(json.loads((ROOT/'data/designers.json').read_text()))
     for filename in ['index.html','essen.html']:
         parser=References();parser.feed((ROOT/filename).read_text())
         for value in parser.paths:

@@ -34,6 +34,21 @@ Essen 資料查核日期為 **2026-10-17**，包含 1,296 筆原始清單對照�
 
 可依設計師或作品名稱搜尋、按姓名／收錄數排序、分頁及切換格狀／列表。進入設計師後可查看主遊戲、擴充、Promo與新版，沿用篩選、詳情及名稱複製。`index.html#designers`、`essen.html#designers`直接開啟目錄，`#designer=uwe%20rosenberg`可定位設計師作品；兩分頁切換時保留設計師視角。
 
+設計師清單卡片與作品頁顯示經 BGG 遊戲署名核對的人物圖片，並可開啟人物頁及照片來源。兩份來源 Excel 的「設計師資料」工作表保存人物 ID、照片網址、本地圖片路徑、核對遊戲、日期與缺圖原因；原有遊戲及文件工作表保持不變。BGG 尚無主要圖片或人物無法確認時保留姓名縮寫，不使用其他人物的圖片。
+
+### 更新設計師照片
+
+```bash
+python3 scripts/fetch_designers.py
+python3 scripts/fetch_designer_galleries.py --apply-reviewed
+```
+
+這是需網路、`Pillow` 與 `requests` 的獨立查核工作，使用限速請求並保存可接續的遊戲署名與人物圖片快取；`--retry-errors` 重試暫時失敗的請求。僅採用對應遊戲署名中完全相符且無衝突的人物連結，再核對人物頁 ID 與姓名，下載 BGG 主要圖片至 `assets/designers/`，排除通用缺圖圖示及已視覺確認的非人物圖片。
+
+圖庫查核預設只保存來源及照片說明；`--apply-reviewed` 僅下載腳本明列且已核對說明、目視確認的圖片，不任選圖庫第一張。新圖庫照片須先核對並加入選取表。2026-10-18 查核共取得 **912 張設計師圖片**，其中27張補自圖庫；另外599位沒有可確認圖片、1位存在同名人物衝突。沒有主要照片的626個人物圖庫均已查核，缺圖原因與來源保存在 Excel。
+
+使用本機 Codex 提供的 Artifact Tool 環境執行 `python3 scripts/update_designer_workbooks.py`，會將查核快取寫入兩份 Excel 的「設計師資料」，保留原有工作表內容；也可直接維護該工作表。之後 `python3 scripts/build.py` 會離線產生 `data/designers.json`。一般建置與網站瀏覽不會重新向 BGG 查詢。
+
 ## 專案結構
 
 ```text
