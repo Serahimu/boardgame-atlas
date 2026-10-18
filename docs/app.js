@@ -3,7 +3,7 @@
 const isEssen=document.body.dataset.collection==='essen';
 const updatesLink=document.createElement('a');updatesLink.href='updates.html';updatesLink.textContent='資料版本與更新';document.querySelector('footer').append(updatesLink);
 let PAGE_SIZE=48;
-document.addEventListener('error',event=>{const img=event.target;if(!(img instanceof HTMLImageElement))return;if(img.closest('.cover')){const fallback=document.createElement('span');fallback.className='placeholder';fallback.textContent=img.alt.replace(/ (?:封面|出版社圖片)$/,'');const label=document.createElement('small');label.textContent=img.alt.includes('出版社圖片')?'出版社圖片暫時無法載入':'封面暫時無法載入';fallback.append(label);img.replaceWith(fallback)}else if(img.closest('.related,.publisher-heading'))img.hidden=true},true);
+document.addEventListener('error',event=>{const img=event.target;if(!(img instanceof HTMLImageElement))return;if(img.matches('.designer-photo')){const fallback=img.parentElement.querySelector('.designer-fallback');fallback.hidden=false;fallback.querySelector('.micro').textContent='照片暫時無法載入';img.remove();return}if(img.closest('.cover')){const fallback=document.createElement('span');fallback.className='placeholder';fallback.textContent=img.alt.replace(/ (?:封面|出版社圖片)$/,'');const label=document.createElement('small');label.textContent=img.alt.includes('出版社圖片')?'出版社圖片暫時無法載入':'封面暫時無法載入';fallback.append(label);img.replaceWith(fallback)}else if(img.closest('.related,.publisher-heading'))img.hidden=true},true);
 async function loadJSON(path){const response=await fetch(path);if(!response.ok)throw new Error(`HTTP ${response.status}`);return response.json()}
 
 const data=(isEssen?await loadJSON('data/essen.json'):(document.getElementById('game-data')?JSON.parse(document.getElementById('game-data').textContent):await loadJSON('data/catalog.json'))), mains=data.filter(d=>d.kind==='主遊戲'), $=id=>document.getElementById(id), esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])), num=v=>v!==null&&v!==''&&Number.isFinite(Number(v))?Number(v):null, val=v=>v===null||v===undefined||v===''?'未提供':String(v), safeurl=v=>/^https:\/\//.test(v||'')?esc(v):'#';
@@ -18,6 +18,22 @@ async function ensurePublishers(){
 }
 function publisherNames(game){const source=(game.publisher||'').trim();return (publisherData?.sources[source]||[]).map(key=>publisherRecords.get(key)?.name).filter(Boolean).join('、')||val(game.publisher)}
 const designers=CatalogCore.buildDesigners(data);
+let designerData=null,designerLoading=false,designerFailed=false;
+async function ensureDesigners(){
+ if(designerData||designerLoading)return;designerLoading=true;designerFailed=false;
+ try{const source=await loadJSON('data/designers.json');designerData=source.designers||source}
+ catch(error){designerFailed=true;console.error(error)}
+ finally{designerLoading=false;if(catalogMode==='designers'){renderDesignerContext();render()}}
+}
+function designerRecord(person){return designerData?.[person.key]||{}}
+function designerPortrait(person){const record=designerRecord(person);return `<div class="cover designer-cover">${record.image?`<img class="designer-photo" src="${esc(record.image)}" alt="${esc(person.name)} 設計師照片" loading="lazy">`:''}<span class="designer-fallback" ${record.image?'hidden':''}><span aria-hidden="true" class="designer-initials">${esc(person.name.split(/\s+/).filter(Boolean).map(part=>part[0]).slice(0,2).join(''))}</span><span class="micro">${designerLoading?'照片載入中':designerFailed?'照片暫時無法載入':'BGG 尚無可確認照片'}</span></span></div>`}
+function renderDesignerContext(){
+ const designer=designerKey?designers.get(designerKey):null;
+ $('designer-context').hidden=!designer;
+ if(!designer){$('designer-context').innerHTML='';return}
+ const record=designerRecord(designer);
+ $('designer-context').innerHTML=`<button class="back" data-all-designers>← 返回設計師清單</button><div class="designer-heading">${designerPortrait(designer)}<div><div class="micro">DESIGNER COLLECTION</div><h2>${esc(designer.name)}</h2><p class="meta">本清單收錄 ${designer.games.filter(game=>game.kind==='主遊戲').length} 款主遊戲 · ${designer.games.length} 個項目。共同設計的作品會分別歸類；依來源姓名分組。</p></div></div><div class="links">${link(record.bggUrl,'BGG 設計師頁')}${link(record.sourceUrl,'設計師照片來源')}</div>`;
+}
 let catalogMode='games',publisherKey=null,designerKey=null;
 const directoryStates={publishers:{search:'',page:1,sort:'publisher-count'},designers:{search:'',page:1,sort:'designer-count'}};
 function currentCollection(){return designerKey?designers.get(designerKey):publisherKey?publishers.get(publisherKey):null}
@@ -106,8 +122,9 @@ function renderDesigners(query){
  const found=[...designers.values()].filter(person=>!query||CatalogCore.normalize(person.name).includes(CatalogCore.normalize(query))||person.games.some(game=>CatalogCore.match(searchIndex.get(game.id),query,'name')));
  found.sort((a,b)=>($('sort').value==='designer-count'?b.games.length-a.games.length:0)||a.name.localeCompare(b.name,'en'));
  $('result').textContent=`${found.length} 位設計師 / 共 ${designers.size} 位 · 僅顯示本清單收錄作品`;
+ if(designerFailed)$('result').insertAdjacentHTML('beforeend',' · <button class="textbtn" data-retry-designers>重試載入照片</button>');
  pageControls(found.length);if(!restoring)saveRoute();
- $('catalog').innerHTML=found.length?found.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(person=>`<button class="card designer-card" data-designer="${esc(person.key)}" aria-label="查看 ${esc(person.name)} 的設計作品"><div class="cover designer-cover"><span aria-hidden="true" class="designer-initials">${esc(person.name.split(/\s+/).filter(Boolean).map(part=>part[0]).slice(0,2).join(''))}</span><span class="micro">GAME DESIGNER</span></div><div><h3>${esc(person.name)}</h3><div class="meta">${person.games.filter(game=>game.kind==='主遊戲').length} 款主遊戲 · ${person.games.length} 項收錄</div></div><div class="cardfoot"><span class="pill">探索設計作品 →</span></div></button>`).join(''):'<div class="empty"><h3>沒有符合條件的設計師</h3><p>試試其他設計師姓名或作品名稱。</p><button class="textbtn" data-reset>清除搜尋</button></div>';
+ $('catalog').innerHTML=found.length?found.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(person=>`<button class="card designer-card" data-designer="${esc(person.key)}" aria-label="查看 ${esc(person.name)} 的設計作品">${designerPortrait(person)}<div><h3>${esc(person.name)}</h3><div class="meta">${person.games.filter(game=>game.kind==='主遊戲').length} 款主遊戲 · ${person.games.length} 項收錄</div></div><div class="cardfoot"><span class="pill">探索設計作品 →</span></div></button>`).join(''):'<div class="empty"><h3>沒有符合條件的設計師</h3><p>試試其他設計師姓名或作品名稱。</p><button class="textbtn" data-reset>清除搜尋</button></div>';
 }
 const sidebar=document.querySelector('.sidebar'),filterButton=document.createElement('button');filterButton.id='filter-toggle';filterButton.className='filter-toggle';filterButton.textContent='篩選條件';filterButton.setAttribute('aria-expanded','false');sidebar.before(filterButton);
 const filterActions=document.createElement('div');filterActions.className='filter-actions';filterActions.innerHTML='<button type="button" id="apply-filters">套用條件</button><button type="button" id="close-filters">關閉</button>';sidebar.append(filterActions);
@@ -177,6 +194,7 @@ function applyRoute(){
  publisherKey=null;designerKey=null;
  catalogMode=location.hash==='#publishers'||location.hash.startsWith('#publisher=')?'publishers':location.hash==='#designers'||location.hash.startsWith('#designer=')?'designers':'games';
  if(catalogMode==='publishers'&&!publisherData&&!publisherLoading&&!publisherFailed)ensurePublishers();
+ if(catalogMode==='designers'&&!designerData&&!designerLoading&&!designerFailed)ensureDesigners();
  if(location.hash.startsWith('#publisher=')){try{const key=decodeURIComponent(location.hash.slice(11));if(publishers.has(key))publisherKey=key}catch{}}
  let missingDesigner=false;
  if(location.hash.startsWith('#designer=')){try{const key=decodeURIComponent(location.hash.slice(10));if(designers.has(key))designerKey=key;else missingDesigner=true}catch{missingDesigner=true}}
@@ -200,9 +218,7 @@ function applyRoute(){
  const publisher=publisherKey?publishers.get(publisherKey):null;
  $('publisher-context').hidden=!publisher;
  $('publisher-context').innerHTML=publisher?`<button class="back" data-all-publishers>← 返回出版社清單</button><div class="publisher-heading">${publisher.image?`<img class="publisher-logo" data-logo-background="${publisher.imageBackground||'light'}" src="${esc(publisher.image)}" alt="${esc(publisher.name)} 出版社圖片">`:''}<div><div class="micro">PUBLISHER COLLECTION</div><h2>${esc(publisher.name)}</h2><p class="meta">本清單收錄 ${publisher.games.length} 個項目</p></div></div><div class="links">${link(publisher.url,'BGG 出版社頁')}${link(publisher.sourceUrl,'出版社圖片來源')}</div>`:'';
- const designer=designerKey?designers.get(designerKey):null;
- $('designer-context').hidden=!designer;
- $('designer-context').innerHTML=designer?`<button class="back" data-all-designers>← 返回設計師清單</button><div class="micro">DESIGNER COLLECTION</div><h2>${esc(designer.name)}</h2><p class="meta">本清單收錄 ${designer.games.filter(game=>game.kind==='主遊戲').length} 款主遊戲 · ${designer.games.length} 個項目。共同設計的作品會分別歸類；依來源姓名分組，同名人物尚未另行查證。</p>`:'';
+ renderDesignerContext();
  for(const [key] of taxonomy)selected[key].clear();
  initMultiselect();page=directory?state.page:1;
  if(directory)$('search').value=state.search;
@@ -221,12 +237,13 @@ function navigateCatalog(hash,returnToDirectory=false){
 document.querySelector('.skip-link').addEventListener('click',event=>{event.preventDefault();$('catalog-section').focus();$('catalog-section').scrollIntoView({block:'start'})});
 window.addEventListener('hashchange',applyRoute);window.addEventListener('popstate',()=>{applyRoute();requestAnimationFrame(()=>window.scrollTo(0,history.state?.scroll||0))});
 document.addEventListener('click',event=>{
- const button=event.target.closest('[data-mode],[data-publisher],[data-designer],[data-all-publishers],[data-all-designers],[data-reload],[data-retry-publishers]');if(!button)return;
+ const button=event.target.closest('[data-mode],[data-publisher],[data-designer],[data-all-publishers],[data-all-designers],[data-reload],[data-retry-publishers],[data-retry-designers]');if(!button)return;
  if(button.hasAttribute('data-mode'))navigateCatalog(button.dataset.mode==='games'?'':button.dataset.mode);
  if(button.hasAttribute('data-publisher'))navigateCatalog('publisher='+encodeURIComponent(button.dataset.publisher));
  if(button.hasAttribute('data-designer'))navigateCatalog('designer='+encodeURIComponent(button.dataset.designer));
  if(button.hasAttribute('data-all-publishers'))navigateCatalog('publishers',true);
  if(button.hasAttribute('data-all-designers'))navigateCatalog('designers',true);
+ if(button.hasAttribute('data-retry-designers')){ensureDesigners();render()}
  if(button.hasAttribute('data-reload'))location.reload();if(button.hasAttribute('data-retry-publishers')){publisherFailed=false;ensurePublishers();render()}
 });
 
