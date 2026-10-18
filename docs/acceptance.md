@@ -18,7 +18,7 @@
 
 ## 自動檢查
 
-執行 `node --test tests/*.test.cjs`、`python3 -m unittest discover -s tests -p 'test_*.py'`、`python3 scripts/build.py`、`python3 scripts/validate_site.py` 及 `git diff --check`。最終結果：Python 14 項、JavaScript 30 項，共44項測試通過；113份JSON、資源引用、ID、關聯、分片與私人資料邊界檢查通過。
+執行 `node --test tests/*.test.cjs`、`python3 -m unittest discover -s tests -p 'test_*.py'`、`python3 scripts/build.py`、`python3 scripts/validate_site.py` 及 `git diff --check`。最終結果：Python 14 項、JavaScript 34 項，共48項測試通過；113份JSON、資源引用、ID、關聯、分片與私人資料邊界檢查通過。
 
 資料測試涵蓋重排列、改名、共用BGG不同版次、多對多／巢狀關聯、缺值與日期、欄位重排、覆寫來源、160筆原清單封面保留及詳情分片引用。個人工具測試涵蓋狀態互斥、備份合併、損壞與quota失敗、資料escape、分享欄位白名單與來源證據。
 
@@ -29,3 +29,15 @@
 - 上述為檔案大小；未把不同網路或裝置的時間差宣稱為量測效能提升。
 - 來源中文名6款、別名12款；實際規則內容先核對 Cubaneo／Fishing 2。全庫資料未填滿的部分明示未知。
 - 無公開許可的PDF不進發布產物；完整本機翻譯掃描留在忽略的 `.private/`。
+
+## 設計師視角驗收
+
+- 兩個分頁新增第三個「設計師清單」按鈕，分別建立132位與1,445位設計師；來源缺署名及佔位資料不混入人物。
+- 共同設計的 Cubaneo 可由 Michael Rieneck、Stefan Stadler 各自找到；保留分號來源姓名中的逗號與資格稱謂。
+- 依作品搜尋、姓名／收錄數排序、格狀／列表、分頁可用；原清單第2頁姓名排序進入 Gordon Calleja 後返回仍保持第2頁與排序。
+- 設計師作品可依類型篩選並開啟遊戲詳情、使用原有複製按鈕；重新整理作品網址保留設計師與已選類型。
+- 兩個分頁切換保留設計師視角；Essen Josh J. Carlson 顯示73項收錄，瀏覽器上一頁返回1,445位設計師目錄。
+- 原有出版社目錄665家、Chip Theory Games 84項及主遊戲目錄1,745款回歸正常。
+- 手機390×844無水平溢出；三個視角按鈕可用，目錄隱藏遊戲篩選按鈕，進入設計師作品後篩選抽屜可用；鍵盤Enter可進入作品。
+- 無效／破損設計師網址回復目錄，無搜尋結果提供清除操作；未見console error。
+- 新增4項核心回歸測試，驗證共同署名、來源範圍、重複去除、缺值及姓名路由鍵；保留不同重音姓名，不推測同一人物。
