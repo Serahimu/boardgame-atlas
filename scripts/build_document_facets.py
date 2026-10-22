@@ -12,7 +12,9 @@ def category(row):
     return '其他'
 def main():
     facets={}
-    for path in sorted((ROOT/'data/essen-documents').glob('*.json')):
+    from dataset_config import configured_datasets
+    paths=[path for config in configured_datasets() if config.get('documentsPath') for path in sorted((ROOT/config['documentsPath']).glob('*.json'))]
+    for path in paths:
         for bgg,rows in json.loads(path.read_text()).items():
             facets[bgg]={'categories':sorted({category(r) for r in rows}),'languages':sorted({str(v) for r in rows for v in [r.get('language'),r.get('detectedLanguage')] if v})}
     (ROOT/'data/document-facets.json').write_text(json.dumps(facets,ensure_ascii=False,separators=(',',':'))+'\n')

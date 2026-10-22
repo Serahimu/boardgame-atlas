@@ -72,7 +72,7 @@ def export_workbooks(paths):
 
 def main():
     from dataset_config import configured_datasets
-    result = export_workbooks([ROOT / config['source'] for config in configured_datasets()])
+    result = export_workbooks(list(dict.fromkeys(ROOT / config.get('designerSource', config['source']) for config in configured_datasets())))
     (ROOT / 'data/designers.json').write_text(json.dumps(result, ensure_ascii=False, separators=(',', ':')) + '\n')
     print(f'Exported {len(result["designers"])} designer records from source workbooks')
 

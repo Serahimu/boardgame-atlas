@@ -35,9 +35,9 @@ def read_rows(archive, index, strings):
     return rows
 
 
-def main():
+def build(config):
     from workbook import read_workbook, named_rows, HEADERS
-    books = read_workbook(SOURCE)
+    books = read_workbook(ROOT / config['source'])
     # Auxiliary sheets also locate their header by required names, not a row number.
     def auxiliary(name, width):
         rows = books[name]
@@ -49,7 +49,8 @@ def main():
     columns = [chr(65 + i) for i in range(26)] + ["A" + chr(65 + i) for i in range(7)]
     source_rows = defaultdict(list)
     for row in originals:
-        source_rows[row["F"]].append({k: row.get(c, "") for k, c in zip(["order", "name", "url", "page", "notes", "bggid", "kind", "parent", "documentStatus"], "ABCDEFGHI")})
+        source_key = row['A'] if config.get('originalsByOrder') else row['F']
+        source_rows[source_key].append({k: row.get(c, "") for k, c in zip(["order", "name", "url", "page", "notes", "bggid", "kind", "parent", "documentStatus"], "ABCDEFGHI")})
     docs_by_game = defaultdict(list)
     for row in documents:
         docs_by_game[row["A"]].append({k: row.get(c, "") for k, c in zip(["bggid", "game", "name", "category", "language", "detectedLanguage", "scope", "url", "button", "source", "sourceUrl", "date", "notes"], "ABCDEFGHIJKLM")})
@@ -64,7 +65,8 @@ def main():
     for index, row in enumerate(games):
         game = {key: row.get(column, "") for key, column in zip(keys, columns)}
         bggid = game["bggid"]
-        game.update(id=index, relatedIds=[], parentIds=[], originals=source_rows[bggid], documentCount=len(docs_by_game[bggid]))
+        source_key = game['sourceOrder'] if config.get('originalsByOrder') else bggid
+        game.update(id=index, relatedIds=[], parentIds=[], originals=source_rows[source_key], documentCount=len(docs_by_game[bggid]))
         if bggid in images:
             game["image"] = images[bggid]
         cover = covers.get(bggid) or covers.get(game["url"])
@@ -76,7 +78,13 @@ def main():
             game.pop("image", None)
         result.append(game)
     ids = {g["bggid"] for g in result}
-    assert all(r["A"] in ids and r["D"] in ids for r in relations), "Unresolved relationship"
+    if config.get('originalsByOrder'):
+        from identity_registry import source_identity
+        counts = Counter(source_identity(game) for game in result)
+        for game in result:
+            if counts[source_identity(game)] > 1:
+                game['sourceEntryId'] = game['sourceOrder']
+    assert all(r["A"] in ids and (r["D"] in ids or config.get('externalParents')) for r in relations), "Unresolved relationship"
     assert all(d["A"] in ids for d in documents), "Unresolved document"
     # Editions can share a BGG ID with their main game, and names can repeat.
     # Resolve the workbook's full relationship key, then use unique row IDs in the UI.
@@ -87,6 +95,12 @@ def main():
         parent_items[(game["bggid"], game["name"])].append(game)
     for row in relations:
         possible_parents = parent_items[(row["D"], row["E"])]
+        if not possible_parents and config.get('externalParents'):
+            possible_parents = [game for game in result if game['bggid'] == row['D']]
+        if not possible_parents and config.get('externalParents'):
+            # The preview retains its exact row count; external parent names/IDs
+            # remain in the detail rather than inventing additional catalogue rows.
+            continue
         assert possible_parents, f"Unresolved parent: {row}"
         parent = min(possible_parents, key=lambda g: g["kind"] != "主遊戲")
         candidates = items[(row["A"], row["B"], row["C"])]
@@ -101,11 +115,18 @@ def main():
         if docs:
             shards[int(bggid) % 32][bggid] = docs
     for index, shard in enumerate(shards):
-        write_json(ROOT / f"data/essen-documents/{index}.json", shard)
-    write_json(ROOT / "data/essen.json", result)
-    write_json(ROOT / "data/essen-notes.json", [{"label": r.get("A", ""), "text": r.get("B", "")} for r in notes])
+        write_json(ROOT / config['documentsPath'] / f'{index}.json', shard)
+    write_json(ROOT / config['listPath'], result)
+    write_json(ROOT / config['notesPath'], [{"label": r.get("A", ""), "text": r.get("B", "")} for r in notes])
     print(f"Exported {len(result)} items, {len(documents)} documents, {len(relations)} relations, {len(originals)} source rows.")
     print(dict(Counter(g["kind"] for g in result)))
+
+
+def main():
+    from dataset_config import configured_datasets
+    for config in configured_datasets():
+        if config['parser'] == 'essen':
+            build(config)
 
 
 if __name__ == "__main__":

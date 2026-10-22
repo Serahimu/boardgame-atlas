@@ -55,7 +55,7 @@ def main():
         json.loads(path.read_text());count+=1
     validate_editorial(json.loads((ROOT/'data/editorial.json').read_text()))
     validate_designers(json.loads((ROOT/'data/designers.json').read_text()))
-    for filename in ['index.html','essen.html']:
+    for filename in [config['page'] for config in configured_datasets()]:
         parser=References();parser.feed((ROOT/filename).read_text())
         for value in parser.paths:
             path=local_reference(value)

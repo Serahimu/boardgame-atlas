@@ -1,12 +1,15 @@
 'use strict';
 (async function () {
-const isEssen=document.body.dataset.collection==='essen';
+const datasets=(await loadJSON('data/datasets.json')).datasets;
+const datasetConfig=datasets.find(config=>config.collection===document.body.dataset.collection);
+if(!datasetConfig)throw new Error('Unknown collection');
+const isEssen=datasetConfig.parser==='essen';
 const updatesLink=document.createElement('a');updatesLink.href='updates.html';updatesLink.textContent='資料版本與更新';document.querySelector('footer').append(updatesLink);
 let PAGE_SIZE=48;
 document.addEventListener('error',event=>{const img=event.target;if(!(img instanceof HTMLImageElement))return;if(img.matches('.designer-photo')){const fallback=img.parentElement.querySelector('.designer-fallback');fallback.hidden=false;fallback.querySelector('.micro').textContent='照片暫時無法載入';img.remove();return}if(img.closest('.cover')){const fallback=document.createElement('span');fallback.className='placeholder';fallback.textContent=img.alt.replace(/ (?:封面|出版社圖片)$/,'');const label=document.createElement('small');label.textContent=img.alt.includes('出版社圖片')?'出版社圖片暫時無法載入':'封面暫時無法載入';fallback.append(label);img.replaceWith(fallback)}else if(img.closest('.related,.publisher-heading'))img.hidden=true},true);
 async function loadJSON(path){const response=await fetch(path);if(!response.ok)throw new Error(`HTTP ${response.status}`);return response.json()}
 
-const data=(isEssen?await loadJSON('data/essen.json'):(document.getElementById('game-data')?JSON.parse(document.getElementById('game-data').textContent):await loadJSON('data/catalog.json'))), mains=data.filter(d=>d.kind==='主遊戲'), $=id=>document.getElementById(id), esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])), num=v=>v!==null&&v!==''&&Number.isFinite(Number(v))?Number(v):null, val=v=>v===null||v===undefined||v===''?'未提供':String(v), safeurl=v=>/^https:\/\//.test(v||'')?esc(v):'#';
+const data=(document.getElementById('game-data')?JSON.parse(document.getElementById('game-data').textContent):await loadJSON(datasetConfig.listPath)), mains=data.filter(d=>d.kind==='主遊戲'), $=id=>document.getElementById(id), esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])), num=v=>v!==null&&v!==''&&Number.isFinite(Number(v))?Number(v):null, val=v=>v===null||v===undefined||v===''?'未提供':String(v), safeurl=v=>/^https:\/\//.test(v||'')?esc(v):'#';
 const byId=new Map(data.map(d=>[d.id,d]));
 let publisherData=null,publisherLoading=false,publisherFailed=false;
 const publisherRecords=new Map(),publishers=new Map();
@@ -97,7 +100,7 @@ function updateSelection(){for(const [key] of taxonomy){$('count-'+key).textCont
 $('multifilters').addEventListener('change',e=>{const input=e.target;if(!input.matches('[data-taxonomy]'))return;const set=selected[input.dataset.taxonomy];input.checked?set.add(input.value):set.delete(input.value);updateSelection();page=1;render()});
 $('multifilters').addEventListener('input',e=>{if(!e.target.matches('[data-option-search]'))return;const group=e.target.closest('.multifilter'),query=e.target.value.trim().toLocaleLowerCase();let visible=0;group.querySelectorAll('.multioption').forEach(label=>{label.hidden=!label.querySelector('input').value.toLocaleLowerCase().includes(query);if(!label.hidden)visible++});group.querySelector('.multinone').hidden=visible>0});
 $('multifilters').addEventListener('click',e=>{const button=e.target.closest('[data-clear-group]');if(!button)return;const key=button.dataset.clearGroup;selected[key].clear();document.querySelectorAll(`[data-taxonomy="${key}"]`).forEach(input=>input.checked=false);updateSelection();page=1;render()});
-if(isEssen)loadJSON('data/essen-notes.json').then(notes=>{$('source-notes').innerHTML=notes.map(n=>`<div class="datum"><dt>${esc(n.label)}</dt><dd>${esc(n.text)}</dd></div>`).join('')}).catch(()=>{$('source-notes').textContent='整理說明載入失敗，請重新整理或下載 Excel 查看。'});
+if(isEssen)loadJSON(datasetConfig.notesPath).then(notes=>{$('source-notes').innerHTML=notes.map(n=>`<div class="datum"><dt>${esc(n.label)}</dt><dd>${esc(n.text)}</dd></div>`).join('')}).catch(()=>{$('source-notes').textContent='整理說明載入失敗，請重新整理或下載 Excel 查看。'});
 
 function catalogGames(){
  return currentCollection()?currentCollection().games:($('catalog-scope')?.value==='all'?data:$('catalog-scope')?.value!=='main'?data.filter(d=>d.kind===$('catalog-scope').value):mains);
@@ -185,7 +188,7 @@ function saveRoute(){const u=new URL(location.href);for(const key of routeFields
 function restoreRoute(){const p=new URLSearchParams(location.search);for(const key of routeFields){if(!p.has(key)||!$(key))continue;const el=$(key),v=p.get(key);if(el.tagName!=='SELECT'||[...el.options].some(o=>o.value===v))el.value=v}for(const [key] of taxonomy){try{const values=JSON.parse(p.get(key)||'[]');if(Array.isArray(values))values.filter(v=>typeof v==='string').forEach(v=>selected[key].add(v))}catch{}}document.querySelectorAll('[data-taxonomy]').forEach(i=>i.checked=selected[i.dataset.taxonomy].has(i.value));updateSelection();if(p.has('page'))page=Math.max(1,Number(p.get('page'))||1);if(p.has('size'))PAGE_SIZE=[24,48,96].includes(Number(p.get('size')))?Number(p.get('size')):48;view=p.get('view')==='list'?'list':view;}
 let migrationsPromise;
 async function restoreGameRoute(game){
- let stable=game;if(/^\d+$/.test(game)){try{migrationsPromise??=loadJSON('data/id-migrations.json').catch(e=>{migrationsPromise=null;throw e});stable=(await migrationsPromise).datasets[isEssen?'essen2026':'catalog']?.[game]||game;}catch{$('result').textContent='舊版遊戲網址對照載入失敗，請重新整理重試。';return}}
+ let stable=game;if(/^\d+$/.test(game)){try{migrationsPromise??=loadJSON('data/id-migrations.json').catch(e=>{migrationsPromise=null;throw e});stable=(await migrationsPromise).datasets[datasetConfig.id]?.[game]||game;}catch{$('result').textContent='舊版遊戲網址對照載入失敗，請重新整理重試。';return}}
  if(new URLSearchParams(location.search).get('game')!==game)return;const d=data.find(x=>x.stableId===stable||String(x.id)===stable);if(d)show(d.id,false,true);else $('result').textContent='此遊戲網址未在目前清單中找到，請使用搜尋查找。';
 }
 function applyRoute(){
@@ -203,7 +206,7 @@ function applyRoute(){
  document.querySelector('.workspace').classList.toggle('publisher-directory',directory);
  document.querySelector('.sidebar').hidden=directory;filterButton.hidden=directory;document.querySelector('.advanced-search').hidden=directory;activeFilters.hidden=directory;
  document.querySelectorAll('[data-mode]').forEach(button=>button.setAttribute('aria-pressed',button.dataset.mode===catalogMode));
- document.querySelectorAll('.collections a').forEach(a=>{const url=new URL(a.getAttribute('href'),location.href);if(!/^(index|essen)\.html$/.test(url.pathname.split('/').at(-1)))return;url.hash=catalogMode==='games'?'':catalogMode;a.href=url.pathname.split('/').at(-1)+url.hash});
+ document.querySelectorAll('.collections a').forEach(a=>{const url=new URL(a.getAttribute('href'),location.href);if(!datasets.some(config=>config.page===url.pathname.split('/').at(-1)))return;url.hash=catalogMode==='games'?'':catalogMode;a.href=url.pathname.split('/').at(-1)+url.hash});
  $('sort').innerHTML=directory?`<option value="${catalogMode==='designers'?'designer-count':'publisher-count'}">收錄項目由多至少</option><option value="name">${catalogMode==='designers'?'設計師姓名':'出版社名稱'} A–Z</option>`:gameSortOptions;
  $('sort').value=directory?state.sort:gameSort;
  for(const id of routeFields)if(id!=='sort')$(id).value=routeDefaults[id];
@@ -262,8 +265,8 @@ document.dispatchEvent(new CustomEvent('atlas:detail',{detail:{game:d}}));}
 function reset(){for(const id of ['catalog-scope','year-filter','missing-values','taxonomy-mode','excluded-tags','search-field','document-category','document-language','personal-state','exclude-personal']){if($(id))$(id).value=({ 'catalog-scope':'main','missing-values':'exclude','taxonomy-mode':'any','search-field':'all'})[id]||'';}for(const [key] of taxonomy)selected[key].clear();document.querySelectorAll('[data-taxonomy]').forEach(input=>input.checked=false);document.querySelectorAll('[data-option-search]').forEach(input=>input.value='');document.querySelectorAll('.multioption').forEach(label=>label.hidden=false);document.querySelectorAll('.multinone').forEach(label=>label.hidden=true);updateSelection();for(const id of ['search','players','time','weight','rating','relation'])$(id).value='';$('sort').value=isDirectory()?(catalogMode==='designers'?'designer-count':'publisher-count'):(isEssen?'source':'name');page=1;render()}
 $('stats').innerHTML=[['主遊戲',mains.length],['擴充 & Promo',data.filter(d=>['擴充','Promo'].includes(d.kind)).length],['新版',data.filter(d=>d.kind==='新版').length]].map(([label,n])=>`<div class="stat"><strong>${n}</strong><span>${label}</span></div>`).join('');
 let searchTimer,composing=false;function queueSearch(){clearTimeout(searchTimer);if(!composing)searchTimer=setTimeout(()=>{page=1;render()},140)}$('search').addEventListener('compositionstart',()=>{composing=true;clearTimeout(searchTimer)});$('search').addEventListener('compositionend',()=>{composing=false;queueSearch()});$('search').addEventListener('input',queueSearch);for(const id of ['players','time','weight','rating','relation','sort'])$(id).addEventListener('change',()=>{page=1;render()});$('reset').onclick=reset;for(const v of ['grid','list'])$(v).onclick=()=>{view=v;try{localStorage.setItem('bgg-catalog-view',v)}catch{}render()};document.addEventListener('click',e=>{if(e.target.closest('[data-copy-name]'))return;const b=e.target.closest('[data-open],[data-page],[data-tab],[data-reset]');if(!b)return;if(b.hasAttribute('data-open'))show(b.dataset.open);if(b.hasAttribute('data-tab')){relTab=b.dataset.tab;const top=$('modal').scrollTop;show(activeId,true);$('modal').scrollTop=top;$('detail').querySelector(`[data-tab="${relTab}"]`).focus({preventScroll:true})}if(b.hasAttribute('data-page')){page=Number(b.dataset.page);render();$('search').scrollIntoView({block:'start',behavior:'smooth'})}if(b.hasAttribute('data-reset'))reset()});$('modal').querySelector('.close').onclick=()=>$('modal').close();$('modal').addEventListener('click',e=>{if(e.target===$('modal')){const r=$('modal').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('modal').close()}});$('modal').addEventListener('close',()=>{if(!$('modal').open){detailRequest++;detailTrail.length=0;activeId=null;}document.body.style.overflow='';if(!$('modal').open){const u=new URL(location.href);u.searchParams.delete('game');history.replaceState(history.state,'',u)}lastFocus?.focus({preventScroll:true})});document.addEventListener('keydown',e=>{if(e.key==='/'&&!$('modal').open&&!['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();$('search').focus()}});applyRoute();
-window.Atlas={data,show,render,get filtered(){return filtered},getFiltered:()=>filtered,terms,selected,collection:isEssen?'essen':'original',getActive:()=>byId.get(activeId),filter(patch){for(const [k,v] of Object.entries(patch)){if(selected[k]&&Array.isArray(v)){selected[k]=new Set(v);document.querySelectorAll(`[data-taxonomy="${k}"]`).forEach(i=>i.checked=selected[k].has(i.value));updateSelection()}else if($(k))$(k).value=v}page=1;render()}};
-document.dispatchEvent(new CustomEvent('atlas:ready',{detail:{data,dataset:isEssen?'essen':'catalog'}}));
+window.Atlas={data,show,render,get filtered(){return filtered},getFiltered:()=>filtered,terms,selected,collection:datasetConfig.collection,datasetConfig,datasets,getActive:()=>byId.get(activeId),filter(patch){for(const [k,v] of Object.entries(patch)){if(selected[k]&&Array.isArray(v)){selected[k]=new Set(v);document.querySelectorAll(`[data-taxonomy="${k}"]`).forEach(i=>i.checked=selected[k].has(i.value));updateSelection()}else if($(k))$(k).value=v}page=1;render()}};
+document.dispatchEvent(new CustomEvent('atlas:ready',{detail:{data,dataset:datasetConfig.id}}));
 
 function appendEssenDetails(d){
  const fields=[['Type（原文）',d.type],['Category（原文）',d.category],['Mechanism（原文）',d.mechanism],['文件清單摘要',d.documentSummary],['文件查找結果',d.documentStatus],['原清單序號',d.sourceOrder],['BGG ID',d.bggid],['收錄來源',d.source],['官網／集資查找頁',d.officialSearch],['查核日期',d.checked],['資料備註',d.notes],['主遊戲 BGG ID',d.parentBggid]];
@@ -274,7 +277,7 @@ async function loadDocuments(d){
  if(!d.documentCount)return;
  const shard=Number(d.bggid)%32;
  try{
-  if(!documentCache.has(shard))documentCache.set(shard,loadJSON(`data/essen-documents/${shard}.json`).catch(error=>{documentCache.delete(shard);throw error}));
+  if(!documentCache.has(shard))documentCache.set(shard,loadJSON(`${datasetConfig.documentsPath}/${shard}.json`).catch(error=>{documentCache.delete(shard);throw error}));
   const records=(await documentCache.get(shard))[d.bggid]||[];
   if(activeId!==d.id)return;
   const container=$('documents');

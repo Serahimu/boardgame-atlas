@@ -29,7 +29,9 @@ def source_identity(game):
         match=re.search(r'/boardgame/(\d+)(?:/|$)',str(game.get('url') or ''))
         source='bgg:'+match[1] if match else canonical_url(game.get('url'))
     if not source:raise ValueError('Item has no stable source URL or BGG ID: '+str(game.get('name')))
-    return json.dumps([source,game.get('kind') or '',canonical_url(game.get('version')),str(game.get('sourceOrder') or '') if game.get('kind')=='佔位項目' else ''],ensure_ascii=False,separators=(',',':'))
+    key=[source,game.get('kind') or '',canonical_url(game.get('version')),str(game.get('sourceOrder') or '') if game.get('kind')=='佔位項目' else '']
+    if game.get('sourceEntryId'):key.append(str(game['sourceEntryId']))
+    return json.dumps(key,ensure_ascii=False,separators=(',',':'))
 
 def assign_identities(games,dataset,registry=None):
     if registry is None:registry={'schemaVersion':1,'datasets':{}}
@@ -52,9 +54,11 @@ def assign_identities(games,dataset,registry=None):
             # On registry creation, retain all IDs already issued to URLs/backups.
             entity=game.get('entityId')
             if not entity:
-                peers=[e for entries in registry['datasets'].values() for e in entries if e['sourceKey']==key and (counts[key]==1 or name in e['names'])]
+                entity_key=source_identity(dict(game,sourceEntryId=None))
+                peers=[e for entries in registry['datasets'].values() for e in entries if e['sourceKey']==entity_key and (counts[key]==1 or name in e['names'])]
                 entities={e['entityId'] for e in peers}
-                entity=next(iter(entities)) if len(entities)==1 else 'game:'+digest
+                entity_digest=hashlib.sha256((entity_key+'\n'+discriminator).encode()).hexdigest()[:20]
+                entity=next(iter(entities)) if len(entities)==1 else 'game:'+entity_digest
             entry={'sourceKey':key,'names':[name],'stableId':game.get('stableId') or dataset+':'+digest,'entityId':entity}
             rows.append(entry);groups.setdefault(key,[]).append(entry)
         if name not in entry['names']:entry['names'].append(name);entry['names'].sort()
