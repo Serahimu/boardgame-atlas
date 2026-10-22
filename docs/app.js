@@ -5,7 +5,7 @@ const datasetConfig=datasets.find(config=>config.collection===document.body.data
 if(!datasetConfig)throw new Error('Unknown collection');
 const isEssen=datasetConfig.parser==='essen';
 const updatesLink=document.createElement('a');updatesLink.href='updates.html';updatesLink.textContent='資料版本與更新';document.querySelector('footer').append(updatesLink);
-let PAGE_SIZE=48;
+let PAGE_SIZE=48,previousPageSize=48;
 document.addEventListener('error',event=>{const img=event.target;if(!(img instanceof HTMLImageElement))return;if(img.matches('.designer-photo')){const fallback=img.parentElement.querySelector('.designer-fallback');fallback.hidden=false;fallback.querySelector('.micro').textContent='照片暫時無法載入';img.remove();return}if(img.closest('.cover')){const fallback=document.createElement('span');fallback.className='placeholder';fallback.textContent=img.alt.replace(/ (?:封面|出版社圖片)$/,'');const label=document.createElement('small');label.textContent=img.alt.includes('出版社圖片')?'出版社圖片暫時無法載入':'封面暫時無法載入';fallback.append(label);img.replaceWith(fallback)}else if(img.closest('.related,.publisher-heading'))img.hidden=true},true);
 async function loadJSON(path){const response=await fetch(path);if(!response.ok)throw new Error(`HTTP ${response.status}`);return response.json()}
 
@@ -106,10 +106,12 @@ function catalogGames(){
  return currentCollection()?currentCollection().games:($('catalog-scope')?.value==='all'?data:$('catalog-scope')?.value!=='main'?data.filter(d=>d.kind===$('catalog-scope').value):mains);
 }
 function pageControls(total){
+ if(PAGE_SIZE==='all'){page=1;$('pages').innerHTML=total?`<span>顯示全部 ${total} 項</span><button data-show-all aria-pressed="true">恢復分頁</button>`:'';return;}
  const totalPages=Math.max(1,Math.ceil(total/PAGE_SIZE));
  page=Math.max(1,Math.min(page,totalPages));
- $('pages').innerHTML=total?`<button data-page="${page-1}" ${page===1?'disabled':''}>上一頁</button><label>第 <input id="page-jump" aria-label="跳至頁碼" type="number" min="1" max="${totalPages}" value="${page}"> / ${totalPages} 頁</label><button data-page="${page+1}" ${page===totalPages?'disabled':''}>下一頁</button>`:'';if($('page-jump'))$('page-jump').onchange=()=>{page=Math.max(1,Math.min(totalPages,Number($('page-jump').value)||1));render();$('catalog-section').focus({preventScroll:true})};
+ $('pages').innerHTML=total?`<button data-page="${page-1}" ${page===1?'disabled':''}>上一頁</button><label>第 <input id="page-jump" aria-label="跳至頁碼" type="number" min="1" max="${totalPages}" value="${page}"> / ${totalPages} 頁</label><button data-page="${page+1}" ${page===totalPages?'disabled':''}>下一頁</button><button data-show-all aria-pressed="false">顯示全部</button>`:'';if($('page-jump'))$('page-jump').onchange=()=>{page=Math.max(1,Math.min(totalPages,Number($('page-jump').value)||1));render();$('catalog-section').focus({preventScroll:true})};
 }
+function pageItems(items){return PAGE_SIZE==='all'?items:items.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE);}
 function renderPublishers(query){
  if(!publisherData){
   $('result').textContent=publisherLoading?'正在載入出版社…':'出版社資料載入失敗';$('pages').innerHTML='';
@@ -119,7 +121,7 @@ function renderPublishers(query){
  found.sort((a,b)=>($('sort').value==='publisher-count'?b.games.length-a.games.length:0)||a.name.localeCompare(b.name,'zh-Hant'));
  $('result').textContent=`${found.length} 家出版社 / 共 ${publishers.size} 家 · 僅顯示本清單收錄項目`;
  pageControls(found.length);if(!restoring)saveRoute();
- $('catalog').innerHTML=found.length?found.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(p=>`<button class="card publisher-card" data-logo-background="${p.imageBackground||'light'}" data-publisher="${esc(p.key)}" aria-label="查看 ${esc(p.name)} 的收錄桌遊"><div class="cover">${p.image?`<img src="${esc(p.image)}" alt="${esc(p.name)} 出版社圖片" loading="lazy">`:`<span class="placeholder">${esc(p.name)}<small>${p.status==='unknown'?'資料未提供出版社':'BGG 暫無出版社圖片'}</small></span>`}</div><div><h3>${esc(p.name)}</h3><div class="meta">${p.games.filter(g=>g.kind==='主遊戲').length} 款主遊戲 · ${p.games.length} 項收錄</div></div><div class="cardfoot"><span class="pill">探索收錄桌遊 →</span></div></button>`).join(''):'<div class="empty"><h3>沒有符合條件的出版社</h3><p>試試其他出版社或遊戲名稱。</p><button class="textbtn" data-reset>清除搜尋</button></div>';
+ $('catalog').innerHTML=found.length?pageItems(found).map(p=>`<button class="card publisher-card" data-logo-background="${p.imageBackground||'light'}" data-publisher="${esc(p.key)}" aria-label="查看 ${esc(p.name)} 的收錄桌遊"><div class="cover">${p.image?`<img src="${esc(p.image)}" alt="${esc(p.name)} 出版社圖片" loading="lazy">`:`<span class="placeholder">${esc(p.name)}<small>${p.status==='unknown'?'資料未提供出版社':'BGG 暫無出版社圖片'}</small></span>`}</div><div><h3>${esc(p.name)}</h3><div class="meta">${p.games.filter(g=>g.kind==='主遊戲').length} 款主遊戲 · ${p.games.length} 項收錄</div></div><div class="cardfoot"><span class="pill">探索收錄桌遊 →</span></div></button>`).join(''):'<div class="empty"><h3>沒有符合條件的出版社</h3><p>試試其他出版社或遊戲名稱。</p><button class="textbtn" data-reset>清除搜尋</button></div>';
 }
 function renderDesigners(query){
  const found=[...designers.values()].filter(person=>!query||CatalogCore.normalize(person.name).includes(CatalogCore.normalize(query))||person.games.some(game=>CatalogCore.match(searchIndex.get(game.id),query,'name')));
@@ -127,7 +129,7 @@ function renderDesigners(query){
  $('result').textContent=`${found.length} 位設計師 / 共 ${designers.size} 位 · 僅顯示本清單收錄作品`;
  if(designerFailed)$('result').insertAdjacentHTML('beforeend',' · <button class="textbtn" data-retry-designers>重試載入照片</button>');
  pageControls(found.length);if(!restoring)saveRoute();
- $('catalog').innerHTML=found.length?found.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(person=>`<button class="card designer-card" data-designer="${esc(person.key)}" aria-label="查看 ${esc(person.name)} 的設計作品">${designerPortrait(person)}<div><h3>${esc(person.name)}</h3><div class="meta">${person.games.filter(game=>game.kind==='主遊戲').length} 款主遊戲 · ${person.games.length} 項收錄</div></div><div class="cardfoot"><span class="pill">探索設計作品 →</span></div></button>`).join(''):'<div class="empty"><h3>沒有符合條件的設計師</h3><p>試試其他設計師姓名或作品名稱。</p><button class="textbtn" data-reset>清除搜尋</button></div>';
+ $('catalog').innerHTML=found.length?pageItems(found).map(person=>`<button class="card designer-card" data-designer="${esc(person.key)}" aria-label="查看 ${esc(person.name)} 的設計作品">${designerPortrait(person)}<div><h3>${esc(person.name)}</h3><div class="meta">${person.games.filter(game=>game.kind==='主遊戲').length} 款主遊戲 · ${person.games.length} 項收錄</div></div><div class="cardfoot"><span class="pill">探索設計作品 →</span></div></button>`).join(''):'<div class="empty"><h3>沒有符合條件的設計師</h3><p>試試其他設計師姓名或作品名稱。</p><button class="textbtn" data-reset>清除搜尋</button></div>';
 }
 const sidebar=document.querySelector('.sidebar'),filterButton=document.createElement('button');filterButton.id='filter-toggle';filterButton.className='filter-toggle';filterButton.textContent='篩選條件';filterButton.setAttribute('aria-expanded','false');sidebar.before(filterButton);
 const filterActions=document.createElement('div');filterActions.className='filter-actions';filterActions.innerHTML='<button type="button" id="apply-filters">套用條件</button><button type="button" id="close-filters">關閉</button>';sidebar.append(filterActions);
@@ -136,9 +138,53 @@ function closeDrawer(cancel=false){if(cancel&&drawerSnapshot){for(const [id,valu
 filterButton.onclick=()=>{drawerSnapshot={values:Object.fromEntries([...sidebar.querySelectorAll('select,input[id]')].map(i=>[i.id,i.value])),tax:Object.fromEntries(taxonomy.map(([key])=>[key,[...selected[key]]]))};sidebar.classList.add('drawer-open');sidebar.setAttribute('role','dialog');sidebar.setAttribute('aria-modal','true');filterButton.setAttribute('aria-expanded','true');document.body.classList.add('filters-open');$('reset').focus()};
 $('apply-filters').onclick=()=>closeDrawer();$('close-filters').onclick=()=>closeDrawer(true);
 sidebar.addEventListener('keydown',e=>{if(!sidebar.classList.contains('drawer-open'))return;if(e.key==='Escape'){e.preventDefault();closeDrawer(true)}if(e.key==='Tab'){const els=[...sidebar.querySelectorAll('button,input,select,summary')].filter(el=>el.getClientRects().length&&!el.disabled),first=els[0],last=els.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
-const density=document.createElement('label');density.innerHTML='每頁 <select id="page-size"><option>24</option><option selected>48</option><option>96</option></select> <label><input id="compact-view" type="checkbox"> 精簡</label>';$('sort').closest('.tools').append(density);
-try{PAGE_SIZE=Number(localStorage.getItem('atlas-page-size'))||48;$('page-size').value=PAGE_SIZE;$('compact-view').checked=localStorage.getItem('atlas-compact')==='true'}catch{}
-$('page-size').onchange=()=>{PAGE_SIZE=Number($('page-size').value);page=1;try{localStorage.setItem('atlas-page-size',PAGE_SIZE)}catch{}render()};$('compact-view').onchange=()=>{try{localStorage.setItem('atlas-compact',$('compact-view').checked)}catch{}render()};
+const density=document.createElement('label');density.innerHTML='每頁 <select id="page-size"><option>24</option><option selected>48</option><option>96</option><option value="all">全部</option></select> <label><input id="compact-view" type="checkbox"> 精簡</label>';$('sort').closest('.tools').append(density);
+try{const saved=localStorage.getItem('atlas-page-size');PAGE_SIZE=saved==='all'?'all':[24,48,96].includes(Number(saved))?Number(saved):48;$('page-size').value=PAGE_SIZE;$('compact-view').checked=localStorage.getItem('atlas-compact')==='true'}catch{}
+$('page-size').onchange=()=>{if(PAGE_SIZE!=='all')previousPageSize=PAGE_SIZE;PAGE_SIZE=$('page-size').value==='all'?'all':Number($('page-size').value);page=1;try{localStorage.setItem('atlas-page-size',PAGE_SIZE)}catch{}render()};$('compact-view').onchange=()=>{try{localStorage.setItem('atlas-compact',$('compact-view').checked)}catch{}render()};
+let selectionMode=false;
+const chosenGames=new Set();
+const selectionTools=document.createElement('div');selectionTools.className='selection-tools';
+selectionTools.innerHTML='<button type="button" id="selection-mode" aria-pressed="false">啟動選取模式</button><button type="button" id="export-selection" disabled>輸出 BGG 連結清單</button><button type="button" id="clear-selection" disabled>清除選取</button><span id="selection-count" role="status" aria-live="polite">已選 0 項</span><p id="selection-help">啟動後，點擊桌遊項目即可選取或取消選取；跨頁與篩選時保留選取。</p>';
+$('catalog').before(selectionTools);
+const linkDialog=document.createElement('dialog');linkDialog.className='selection-dialog';linkDialog.setAttribute('aria-labelledby','selection-title');
+linkDialog.innerHTML='<div class="modalbar"><h2 id="selection-title">所選 BGG 連結清單</h2><button type="button" class="close" aria-label="關閉連結清單">×</button></div><p id="selection-summary"></p><label for="selection-links">每行一個連結</label><textarea id="selection-links" readonly spellcheck="false"></textarea><button type="button" id="copy-selection">複製全部連結</button><p id="selection-copy-status" role="status" aria-live="polite"></p>';
+document.body.append(linkDialog);
+linkDialog.querySelector('.close').onclick=()=>linkDialog.close();
+linkDialog.addEventListener('click',e=>{if(e.target!==linkDialog)return;const r=linkDialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)linkDialog.close()});
+linkDialog.addEventListener('close',()=>{$('export-selection').focus({preventScroll:true})});
+function updateGameSelection(){
+ $('selection-mode').setAttribute('aria-pressed',selectionMode);$('selection-mode').textContent=selectionMode?'退出選取模式':'啟動選取模式';
+ $('selection-mode').disabled=isDirectory();
+ $('export-selection').disabled=$('clear-selection').disabled=chosenGames.size===0;
+ $('selection-count').textContent=`已選 ${chosenGames.size} 項`;
+ $('selection-help').textContent=isDirectory()?'進入出版社或設計師的作品清單後，即可選取桌遊項目。':selectionMode?'選取模式已啟動：點擊桌遊項目只會選取或取消選取，不開啟詳情。跨頁與篩選時保留選取。':'啟動後，點擊桌遊項目即可選取或取消選取；跨頁與篩選時保留選取。';
+ document.querySelectorAll('.game-card').forEach(card=>{
+  const game=byId.get(Number(card.dataset.open)),chosen=chosenGames.has(game.id),button=card.querySelector('.game-name-open');
+  card.classList.toggle('selection-active',selectionMode);card.classList.toggle('is-selected',selectionMode&&chosen);
+  if(selectionMode){button.setAttribute('aria-pressed',chosen);button.setAttribute('aria-label',`${chosen?'取消選取':'選取'} ${game.name}`)}else{button.removeAttribute('aria-pressed');button.setAttribute('aria-label',`查看 ${game.name} 詳情`)}
+  let marker=card.querySelector('.selection-marker');if(selectionMode&&!marker){marker=document.createElement('span');marker.className='selection-marker';marker.setAttribute('aria-hidden','true');card.prepend(marker)}
+  if(marker){marker.hidden=!selectionMode;marker.textContent=CatalogCore.bggGameUrl(game)?chosen?'已選取':'選取':'無 BGG 連結';}
+ });
+}
+function toggleGameSelection(id){
+ const game=byId.get(Number(id));if(!game)return;
+ if(!CatalogCore.bggGameUrl(game)){$('selection-count').textContent='此項目未提供 BGG 遊戲連結，無法選取。';return;}
+ chosenGames.has(game.id)?chosenGames.delete(game.id):chosenGames.add(game.id);updateGameSelection();
+}
+$('selection-mode').onclick=()=>{selectionMode=!selectionMode;updateGameSelection()};
+$('clear-selection').onclick=()=>{chosenGames.clear();updateGameSelection()};
+document.addEventListener('click',e=>{
+ if(!selectionMode)return;const item=e.target.closest('.game-card,[data-open],[data-explore-open]');if(!item)return;
+ const id=item.dataset.open??data.find(g=>(g.stableId||String(g.id))===item.dataset.exploreOpen)?.id;
+ if(id===undefined)return;e.preventDefault();e.stopImmediatePropagation();toggleGameSelection(id);
+},true);
+$('export-selection').onclick=()=>{const links=CatalogCore.bggLinks([...chosenGames].map(id=>byId.get(id)));$('selection-links').value=links.join('\n');$('selection-summary').textContent=`已選 ${chosenGames.size} 個項目，共 ${links.length} 個 BGG 連結。相同 BGG 遊戲的不同版次合併為一個連結。`;$('selection-copy-status').textContent='';linkDialog.showModal()};
+$('copy-selection').onclick=async()=>{
+ const field=$('selection-links');
+ const fallback=()=>{field.focus();field.select();if(!document.execCommand('copy'))throw new Error('Copy failed')};
+ try{if(navigator.clipboard?.writeText){try{await navigator.clipboard.writeText(field.value)}catch{fallback()}}else fallback();$('selection-copy-status').textContent='已複製全部連結。'}catch{$('selection-copy-status').textContent='無法自動複製，請選取上方連結後手動複製。';field.focus();field.select()}
+};
+$('pages').addEventListener('click',e=>{if(!e.target.closest('[data-show-all]'))return;if(PAGE_SIZE==='all')PAGE_SIZE=previousPageSize;else{previousPageSize=PAGE_SIZE;PAGE_SIZE='all'}page=1;try{localStorage.setItem('atlas-page-size',PAGE_SIZE)}catch{}render();$('catalog-section').scrollIntoView({block:'start'});});
 const activeFilters=document.createElement('div');activeFilters.id='active-filters';activeFilters.className='active-filters';$('catalog').before(activeFilters);
 function renderChips(){
  filterButton.textContent='篩選條件'+(taxonomy.reduce((n,[key])=>n+selected[key].size,0)?` · ${taxonomy.reduce((n,[key])=>n+selected[key].size,0)}`:'');
@@ -149,6 +195,7 @@ function renderChips(){
 activeFilters.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.removeFilter){$(b.dataset.removeFilter).value=b.dataset.removeFilter==='search-field'?'all':b.dataset.removeFilter==='taxonomy-mode'?'any':b.dataset.removeFilter==='catalog-scope'?'main':b.dataset.removeFilter==='missing-values'?'exclude':'';}if(b.dataset.removeTax){selected[b.dataset.removeTax].delete(b.dataset.term);document.querySelectorAll('[data-taxonomy]').forEach(i=>i.checked=selected[i.dataset.taxonomy].has(i.value));updateSelection()}page=1;render()};
 function render(){
  renderChips();
+ updateGameSelection();
  $('page-size').value=PAGE_SIZE;
  if(!restoring)saveRoute();
  const directory=isDirectory();
@@ -180,12 +227,13 @@ function render(){
  filtered.sort((a,b)=>{const n=(d,key,missing)=>num(d[key])??missing;return (sort==='relevance'?CatalogCore.relevance(searchIndex.get(b.id),query)-CatalogCore.relevance(searchIndex.get(a.id),query):sort==='source'?(num(a.sourceOrder)??999999)-(num(b.sourceOrder)??999999):sort==='rating'?n(b,'rating',-1)-n(a,'rating',-1):sort==='year'?n(b,'year',-1)-n(a,'year',-1):sort==='weight'?n(a,'weight',99)-n(b,'weight',99):sort==='relations'?family(b).length-family(a).length:0)||a.name.localeCompare(b.name,'en')});
  $('result').textContent=currentCollection()?`${filtered.length} / ${candidates.length} 項收錄桌遊`:`${filtered.length} / ${candidates.length} ${$('catalog-scope').value==='main'?'款主遊戲':'個項目'}`;
  pageControls(filtered.length);if(!restoring)saveRoute();
- $('catalog').innerHTML=filtered.length?filtered.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE).map(d=>`<article class="card game-card" data-open="${d.id}">${cover(d)}<div><div class="game-title"><h3><button type="button" class="game-name-open" data-open="${d.id}" aria-label="查看 ${esc(d.name)} 詳情">${esc(d.name)}</button></h3>${copyNameButton(d)}</div>${d.nameZh?`<div class="name-zh">${esc(d.nameZh)}</div>`:""}<div class="meta">${esc(val(d.year))} · ${esc(val(d.players).replace(/ Players?/g,''))} 人<br>${esc(val(d.time))} · 重度 ${num(d.weight)===null?'未提供':num(d.weight).toFixed(2)}</div></div><div class="cardfoot">${currentCollection()?`<span class="pill">${esc(d.kind)}</span>`:''}${view==='list'?`<span class="pill">BGG ${score(d)}</span>`:''}${counts(d)}${query?`<span class="pill match">${matches(d,query)?Object.entries(searchIndex.get(d.id)).filter(([,v])=>CatalogCore.match({text:v},query)).map(([k])=>({name:'名稱',designer:'設計師',publisher:'出版社',mechanism:'機制',category:'分類'}[k])).join('、')||'多欄位':'相關項目'}符合搜尋</span>`:''}</div></article>`).join(''):'<div class="empty"><h3>沒有符合條件的遊戲</h3><p>試試其他關鍵字，或重設篩選條件。</p><button class="textbtn" data-reset>清除所有條件</button></div>';
+ $('catalog').innerHTML=filtered.length?pageItems(filtered).map(d=>`<article class="card game-card" data-open="${d.id}">${cover(d)}<div><div class="game-title"><h3><button type="button" class="game-name-open" data-open="${d.id}" aria-label="查看 ${esc(d.name)} 詳情">${esc(d.name)}</button></h3>${copyNameButton(d)}</div>${d.nameZh?`<div class="name-zh">${esc(d.nameZh)}</div>`:""}<div class="meta">${esc(val(d.year))} · ${esc(val(d.players).replace(/ Players?/g,''))} 人<br>${esc(val(d.time))} · 重度 ${num(d.weight)===null?'未提供':num(d.weight).toFixed(2)}</div></div><div class="cardfoot">${currentCollection()?`<span class="pill">${esc(d.kind)}</span>`:''}${view==='list'?`<span class="pill">BGG ${score(d)}</span>`:''}${counts(d)}${query?`<span class="pill match">${matches(d,query)?Object.entries(searchIndex.get(d.id)).filter(([,v])=>CatalogCore.match({text:v},query)).map(([k])=>({name:'名稱',designer:'設計師',publisher:'出版社',mechanism:'機制',category:'分類'}[k])).join('、')||'多欄位':'相關項目'}符合搜尋</span>`:''}</div></article>`).join(''):'<div class="empty"><h3>沒有符合條件的遊戲</h3><p>試試其他關鍵字，或重設篩選條件。</p><button class="textbtn" data-reset>清除所有條件</button></div>';
+ updateGameSelection();
 }
 const routeFields=['search','players','time','weight','rating','relation','sort','search-field','year-filter','missing-values','catalog-scope','taxonomy-mode','excluded-tags','document-category','document-language','personal-state','exclude-personal'];
 const routeDefaults=Object.fromEntries(routeFields.map(id=>[id,$(id).value]));
 function saveRoute(){const u=new URL(location.href);for(const key of routeFields){const value=$(key)?.value;if(value)u.searchParams.set(key,value);else u.searchParams.delete(key)}for(const [key] of taxonomy){if(selected[key].size)u.searchParams.set(key,JSON.stringify([...selected[key]]));else u.searchParams.delete(key)}u.searchParams.set('page',page);u.searchParams.set('size',PAGE_SIZE);u.searchParams.set('view',view);history.replaceState({...history.state,scroll:window.scrollY},'',u);}
-function restoreRoute(){const p=new URLSearchParams(location.search);for(const key of routeFields){if(!p.has(key)||!$(key))continue;const el=$(key),v=p.get(key);if(el.tagName!=='SELECT'||[...el.options].some(o=>o.value===v))el.value=v}for(const [key] of taxonomy){try{const values=JSON.parse(p.get(key)||'[]');if(Array.isArray(values))values.filter(v=>typeof v==='string').forEach(v=>selected[key].add(v))}catch{}}document.querySelectorAll('[data-taxonomy]').forEach(i=>i.checked=selected[i.dataset.taxonomy].has(i.value));updateSelection();if(p.has('page'))page=Math.max(1,Number(p.get('page'))||1);if(p.has('size'))PAGE_SIZE=[24,48,96].includes(Number(p.get('size')))?Number(p.get('size')):48;view=p.get('view')==='list'?'list':view;}
+function restoreRoute(){const p=new URLSearchParams(location.search);for(const key of routeFields){if(!p.has(key)||!$(key))continue;const el=$(key),v=p.get(key);if(el.tagName!=='SELECT'||[...el.options].some(o=>o.value===v))el.value=v}for(const [key] of taxonomy){try{const values=JSON.parse(p.get(key)||'[]');if(Array.isArray(values))values.filter(v=>typeof v==='string').forEach(v=>selected[key].add(v))}catch{}}document.querySelectorAll('[data-taxonomy]').forEach(i=>i.checked=selected[i.dataset.taxonomy].has(i.value));updateSelection();if(p.has('page'))page=Math.max(1,Number(p.get('page'))||1);if(p.has('size'))PAGE_SIZE=p.get('size')==='all'?'all':[24,48,96].includes(Number(p.get('size')))?Number(p.get('size')):48;view=p.get('view')==='list'?'list':view;}
 let migrationsPromise;
 async function restoreGameRoute(game){
  let stable=game;if(/^\d+$/.test(game)){try{migrationsPromise??=loadJSON('data/id-migrations.json').catch(e=>{migrationsPromise=null;throw e});stable=(await migrationsPromise).datasets[datasetConfig.id]?.[game]||game;}catch{$('result').textContent='舊版遊戲網址對照載入失敗，請重新整理重試。';return}}
@@ -252,7 +300,7 @@ document.addEventListener('click',event=>{
 
 function link(url,label,primary=false){return url?`<a class="link${primary?' primary':''}" href="${safeurl(url)}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`:''}
 const detailTrail=[];let detailRequest=0;const detailCache=new Map();
-async function show(id,keepTab=false,fromRoute=false){const d=data.find(x=>x.id===Number(id)||x.stableId===id);if(!d)return;
+async function show(id,keepTab=false,fromRoute=false){const d=data.find(x=>x.id===Number(id)||x.stableId===id);if(!d)return;if(selectionMode&&!fromRoute){toggleGameSelection(d.id);return;}
 if(!keepTab&&activeId!==null&&activeId!==d.id)detailTrail.push(activeId);const request=++detailRequest;activeId=d.id;
 if(d.detailPath&&!d.detailsLoaded){
  if(!$('modal').open){lastFocus=document.activeElement;$('modal').showModal();document.body.style.overflow='hidden'}

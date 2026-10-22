@@ -17,5 +17,12 @@ function buildDesigners(games){
  for(const game of games){if(game.kind==='佔位項目')continue;const seen=new Set();for(const name of designerNames(game.designer)){const key=designerKey(name);if(seen.has(key))continue;seen.add(key);if(!designers.has(key))designers.set(key,{key,name,games:[]});designers.get(key).games.push(game)}}
  return designers;
 }
-const api={fields,normalize,index,match,relevance,decode,designerKey,designerNames,buildDesigners};root.CatalogCore=api;if(typeof module!=='undefined')module.exports=api;
+function bggGameUrl(game){
+ const id=String(game.bggid||'').trim();
+ if(/^\d+$/.test(id)&&Number(id)>0)return 'https://boardgamegeek.com/boardgame/'+id;
+ const match=String(game.url||'').match(/^https?:\/\/(?:www\.)?boardgamegeek\.com\/boardgame\/(\d+)(?:[/?#]|$)/i);
+ return match&&Number(match[1])>0?'https://boardgamegeek.com/boardgame/'+match[1]:null;
+}
+function bggLinks(games){return [...new Set(games.map(bggGameUrl).filter(Boolean))];}
+const api={fields,normalize,index,match,relevance,decode,designerKey,designerNames,buildDesigners,bggGameUrl,bggLinks};root.CatalogCore=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window==='undefined'?globalThis:window);
